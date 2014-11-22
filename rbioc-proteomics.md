@@ -9,7 +9,7 @@ Using R and Bioconductor for proteomics data analysis
 
 [Atelier PROSPECTOM](http://prospectom.liglab.fr/atelier-2014/index.html) 19 Nov 2014, Grenoble, France
 
-Version of this document: f00ad21 [2014-11-22 10:58:51 +0000]
+Version of this document: 4fbd393 [2014-11-22 18:21:17 +0000]
 
 
 ## Setup
@@ -486,7 +486,7 @@ system.time({
 
 ```
 ##    user  system elapsed 
-##  32.175   0.098  32.322
+##  31.034   0.096  31.217
 ```
 
 ```r
@@ -561,7 +561,7 @@ system.time({
 
 ```
 ##    user  system elapsed 
-##   0.333   0.002   0.338
+##   0.321   0.001   0.323
 ```
 
 ```r
@@ -860,7 +860,7 @@ msexp
 ##  MSn M/Z range: 100 2016.66 
 ##  MSn retention times: 25:1 - 25:2 minutes
 ## - - - Processing information - - -
-## Data loaded: Sat Nov 22 14:48:57 2014 
+## Data loaded: Sat Nov 22 18:23:18 2014 
 ##  MSnbase version: 1.14.1 
 ## - - - Meta data  - - -
 ## phenoData
@@ -1033,8 +1033,8 @@ msexp[1:3]
 ##  MSn M/Z range: 100 2016.66 
 ##  MSn retention times: 25:1 - 25:2 minutes
 ## - - - Processing information - - -
-## Data loaded: Sat Nov 22 14:48:57 2014 
-## Data [numerically] subsetted 3 spectra: Sat Nov 22 14:48:58 2014 
+## Data loaded: Sat Nov 22 18:23:18 2014 
+## Data [numerically] subsetted 3 spectra: Sat Nov 22 18:23:19 2014 
 ##  MSnbase version: 1.14.1 
 ## - - - Meta data  - - -
 ## phenoData
@@ -1126,8 +1126,8 @@ processingData(msset)
 
 ```
 ## - - - Processing information - - -
-## Data loaded: Sat Nov 22 14:48:57 2014 
-## iTRAQ4 quantification by trapezoidation: Sat Nov 22 14:48:59 2014 
+## Data loaded: Sat Nov 22 18:23:18 2014 
+## iTRAQ4 quantification by trapezoidation: Sat Nov 22 18:23:20 2014 
 ##  MSnbase version: 1.14.1
 ```
 
@@ -1216,7 +1216,7 @@ mztf <- pxget(px, pxfiles(px)[2])
 ## experimentData: use 'experimentData(object)'
 ## Annotation:  
 ## - - - Processing information - - -
-## mzTab read: Sat Nov 22 14:49:01 2014 
+## mzTab read: Sat Nov 22 18:23:24 2014 
 ##  MSnbase version: 1.14.1
 ```
 
@@ -1329,8 +1329,8 @@ processingData(qnt.crct)
 ```
 ## - - - Processing information - - -
 ## Data loaded: Wed May 11 18:54:39 2011 
-## iTRAQ4 quantification by trapezoidation: Sat Nov 22 14:49:03 2014 
-## Purity corrected: Sat Nov 22 14:49:04 2014 
+## iTRAQ4 quantification by trapezoidation: Sat Nov 22 18:23:26 2014 
+## Purity corrected: Sat Nov 22 18:23:26 2014 
 ##  MSnbase version: 1.1.22
 ```
 
@@ -1392,10 +1392,10 @@ processingData(prt)
 ```
 ## - - - Processing information - - -
 ## Data loaded: Wed May 11 18:54:39 2011 
-## iTRAQ4 quantification by trapezoidation: Sat Nov 22 14:49:03 2014 
-## Purity corrected: Sat Nov 22 14:49:04 2014 
-## Normalised (quantiles): Sat Nov 22 14:49:04 2014 
-## Combined 55 features into 3 using sum: Sat Nov 22 14:49:04 2014 
+## iTRAQ4 quantification by trapezoidation: Sat Nov 22 18:23:26 2014 
+## Purity corrected: Sat Nov 22 18:23:26 2014 
+## Normalised (quantiles): Sat Nov 22 18:23:26 2014 
+## Combined 55 features into 3 using sum: Sat Nov 22 18:23:26 2014 
 ##  MSnbase version: 1.1.22
 ```
 
@@ -1526,8 +1526,8 @@ e
 ##   pubMedIds: http://www.ncbi.nlm.nih.gov/pubmed/22588121 
 ## Annotation:  
 ## - - - Processing information - - -
-## Subset [697,14][675,14] Sat Nov 22 14:49:04 2014 
-## Applied pp.msms.data preprocessing: Sat Nov 22 14:49:04 2014 
+## Subset [697,14][675,14] Sat Nov 22 18:23:27 2014 
+## Applied pp.msms.data preprocessing: Sat Nov 22 18:23:27 2014 
 ##  MSnbase version: 1.8.0
 ```
 
