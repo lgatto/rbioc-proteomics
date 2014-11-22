@@ -495,7 +495,7 @@ Another useful slot is `processingData`, accessed with
 undergone since their creation (see examples below).
 
 The `readMSData` will parse the raw data, extract the MS2 spectra (by
-default) and construct an MS experiment file.
+default) and construct an MS experiment object of class `MSnExp`.
 
 (Note that while `readMSData` supports MS1 data, this is currently not
 convenient as all the data is read into memory.)
@@ -509,8 +509,9 @@ msexp <- readMSData(rawFile, verbose = FALSE)
 msexp
 ```
 
-MS2 spectra can be extracted as a list of `Spectrum2` objects with the `spectra`
-accessor or with the `[` operator.  Individual can be accessed with `[[`.
+MS2 spectra can be extracted as a list of `Spectrum2` objects with the
+`spectra` accessor or as a subset of the original `MSnExp` data with
+the `[` operator.  Individual spectra can be accessed with `[[`.
 
 ```{r}
 length(msexp)
@@ -529,6 +530,9 @@ basename(identFile)
 msexp <- addIdentificationData(msexp, identFile)
 fData(msexp)
 ```
+
+The `readMSData` and `addIdentificationData` make use of `mzR` and
+`mzID` packages to access the raw and identification data.
 
 Spectra and (parts of) experiments can be extraced and plotted.
 
@@ -610,7 +614,7 @@ vendor files.
 > Have a look at the `?quantify` documentation file and review the
 > above by walking through the example.
 
-## Importing third-party quantitative data
+## Importing third-party quantitation data
 
 The PSI `mzTab` file format is aimed at providing a simpler (than XML
 formats) and more accessible file format to the wider community. It is
@@ -803,6 +807,12 @@ learning algorithms. Initially developed for microarray and
 [`pRoloc`](http://www.bioconductor.org/packages/release/bioc/html/pRoloc.html)
 package enables application of these algorithms to `MSnSet` data.
 
+### Classification
+
+The example below uses `knn` with the 5 closest neighbours as an
+illustration to classify proteins of unknown sub-cellular localisation
+to one of 9 possible organelles.
+
 ```{r, ml}
 library("MLInterfaces")
 library("pRoloc")
@@ -813,11 +823,17 @@ ans <- MLearn(markers ~ ., data = t(dunkley2006), knnI(k = 5), traininds)
 ans
 ```
 
+### Clustering
+
+#### kmeans
+
 ```{r clust}
 kcl <- MLearn( ~ ., data = dunkley2006, kmeansI, centers = 12)
 kcl
 plot(kcl, exprs(dunkley2006))
 ```
+
+#### Hierarchical clustering
 
 ```{r clust2}
 hcl <- MLearn( ~ ., data = t(dunkley2006), hclustI(distFun =  dist, cutParm = list(k = 4)))
@@ -825,11 +841,11 @@ hcl
 plot(hcl, exprs(t(dunkley2006)))
 ```
 
-A wide range of classification algorithms are also available, as
-described in the `?MLearn` documentation page. The `pRoloc` package
-also uses `MSnSet` instances as input and ,while being conceived with
-the analysis of spatial/organelle proteomics data in mind, is
-applicable many use cases.
+A wide range of classification and clustering algorithms are also
+available, as described in the `?MLearn` documentation page. The
+`pRoloc` package also uses `MSnSet` instances as input and ,while
+being conceived with the analysis of spatial/organelle proteomics data
+in mind, is applicable many use cases.
 
 ## Annotation
 
