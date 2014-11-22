@@ -9,7 +9,7 @@ Using R and Bioconductor for proteomics data analysis
 
 [Atelier PROSPECTOM](http://prospectom.liglab.fr/atelier-2014/index.html) 19 Nov 2014, Grenoble, France
 
-Version of this document: c5bda0d [2014-11-19 14:50:09 +0000]
+Version of this document: f00ad21 [2014-11-22 10:58:51 +0000]
 
 
 ## Setup
@@ -138,21 +138,21 @@ pxannounced()
 
 ```
 ##     Data.Set    Publication.Data             Message
-## 1  PXD001283 2014-11-19 08:44:40                 New
-## 2  PXD001301 2014-11-19 08:42:01                 New
-## 3  PXD000837 2014-11-19 08:30:45 Updated information
-## 4  PXD000715 2014-11-18 16:34:39 Updated information
-## 5  PXD000837 2014-11-18 16:30:02 Updated information
-## 6  PXD001354 2014-11-18 16:29:15 Updated information
-## 7  PXD000627 2014-11-18 16:28:07 Updated information
-## 8  PXD001125 2014-11-18 16:27:02 Updated information
-## 9  PXD001045 2014-11-18 16:26:04 Updated information
-## 10 PXD001260 2014-11-18 16:24:55 Updated information
-## 11 PXD001414 2014-11-18 16:22:44 Updated information
-## 12 PXD000715 2014-11-18 09:35:10                 New
-## 13 PXD000837 2014-11-18 09:27:36                 New
-## 14 PXD001260 2014-11-18 09:13:08 Updated information
-## 15 PXD001045 2014-11-18 09:12:15 Updated information
+## 1  PXD001159 2014-11-20 11:26:30                 New
+## 2  PXD001386 2014-11-20 10:50:37                 New
+## 3  PXD001091 2014-11-20 09:49:23                 New
+## 4  PXD001031 2014-11-20 09:35:05                 New
+## 5  PXD000413 2014-11-20 09:04:45                 New
+## 6  PXD001283 2014-11-19 08:44:40                 New
+## 7  PXD001301 2014-11-19 08:42:01                 New
+## 8  PXD000837 2014-11-19 08:30:45 Updated information
+## 9  PXD000715 2014-11-18 16:34:39 Updated information
+## 10 PXD000837 2014-11-18 16:30:02 Updated information
+## 11 PXD001354 2014-11-18 16:29:15 Updated information
+## 12 PXD000627 2014-11-18 16:28:07 Updated information
+## 13 PXD001125 2014-11-18 16:27:02 Updated information
+## 14 PXD001045 2014-11-18 16:26:04 Updated information
+## 15 PXD001260 2014-11-18 16:24:55 Updated information
 ```
 
 
@@ -486,7 +486,7 @@ system.time({
 
 ```
 ##    user  system elapsed 
-##  18.338   0.238  18.602
+##  32.175   0.098  32.322
 ```
 
 ```r
@@ -561,7 +561,7 @@ system.time({
 
 ```
 ##    user  system elapsed 
-##   0.319   0.004   0.324
+##   0.333   0.002   0.338
 ```
 
 ```r
@@ -688,7 +688,7 @@ or, use `MSGFplus`:
 library("MSGFplus")
 msgfpar <- msgfPar(database = fas,
                instrument = 'HighRes',
-               enzyme = 'Trypsin'm
+               enzyme = 'Trypsin',
                protocol = 'iTRAQ')
 runMSGF(msgfpar, mzf)
 ```
@@ -825,7 +825,7 @@ Another useful slot is `processingData`, accessed with
 undergone since their creation (see examples below).
 
 The `readMSData` will parse the raw data, extract the MS2 spectra (by
-default) and construct an MS experiment file.
+default) and construct an MS experiment object of class `MSnExp`.
 
 (Note that while `readMSData` supports MS1 data, this is currently not
 convenient as all the data is read into memory.)
@@ -860,8 +860,8 @@ msexp
 ##  MSn M/Z range: 100 2016.66 
 ##  MSn retention times: 25:1 - 25:2 minutes
 ## - - - Processing information - - -
-## Data loaded: Wed Nov 19 22:20:18 2014 
-##  MSnbase version: 1.14.0 
+## Data loaded: Sat Nov 22 14:48:57 2014 
+##  MSnbase version: 1.14.1 
 ## - - - Meta data  - - -
 ## phenoData
 ##   rowNames: 1
@@ -877,8 +877,9 @@ msexp
 ## experimentData: use 'experimentData(object)'
 ```
 
-MS2 spectra can be extracted as a list of `Spectrum2` objects with the `spectra`
-accessor or with the `[` operator.  Individual can be accessed with `[[`.
+MS2 spectra can be extracted as a list of `Spectrum2` objects with the
+`spectra` accessor or as a subset of the original `MSnExp` data with
+the `[` operator.  Individual spectra can be accessed with `[[`.
 
 
 ```r
@@ -988,6 +989,9 @@ fData(msexp)
 ## X5.1         2     1         1         1        1
 ```
 
+The `readMSData` and `addIdentificationData` make use of `mzR` and
+`mzID` packages to access the raw and identification data.
+
 Spectra and (parts of) experiments can be extraced and plotted.
 
 
@@ -1029,9 +1033,9 @@ msexp[1:3]
 ##  MSn M/Z range: 100 2016.66 
 ##  MSn retention times: 25:1 - 25:2 minutes
 ## - - - Processing information - - -
-## Data loaded: Wed Nov 19 22:20:18 2014 
-## Data [numerically] subsetted 3 spectra: Wed Nov 19 22:20:19 2014 
-##  MSnbase version: 1.14.0 
+## Data loaded: Sat Nov 22 14:48:57 2014 
+## Data [numerically] subsetted 3 spectra: Sat Nov 22 14:48:58 2014 
+##  MSnbase version: 1.14.1 
 ## - - - Meta data  - - -
 ## phenoData
 ##   rowNames: 1
@@ -1122,9 +1126,9 @@ processingData(msset)
 
 ```
 ## - - - Processing information - - -
-## Data loaded: Wed Nov 19 22:20:18 2014 
-## iTRAQ4 quantification by trapezoidation: Wed Nov 19 22:20:20 2014 
-##  MSnbase version: 1.14.0
+## Data loaded: Sat Nov 22 14:48:57 2014 
+## iTRAQ4 quantification by trapezoidation: Sat Nov 22 14:48:59 2014 
+##  MSnbase version: 1.14.1
 ```
 
 Other MS2 quantitation methods available in `quantify` include the
@@ -1165,7 +1169,7 @@ vendor files.
 > Have a look at the `?quantify` documentation file and review the
 > above by walking through the example.
 
-## Importing third-party quantitative data
+## Importing third-party quantitation data
 
 The PSI `mzTab` file format is aimed at providing a simpler (than XML
 formats) and more accessible file format to the wider community. It is
@@ -1212,8 +1216,8 @@ mztf <- pxget(px, pxfiles(px)[2])
 ## experimentData: use 'experimentData(object)'
 ## Annotation:  
 ## - - - Processing information - - -
-## mzTab read: Wed Nov 19 22:20:31 2014 
-##  MSnbase version: 1.14.0
+## mzTab read: Sat Nov 22 14:49:01 2014 
+##  MSnbase version: 1.14.1
 ```
 
 It is also possible to import arbitrary spreadsheets as `MSnSet`
@@ -1325,8 +1329,8 @@ processingData(qnt.crct)
 ```
 ## - - - Processing information - - -
 ## Data loaded: Wed May 11 18:54:39 2011 
-## iTRAQ4 quantification by trapezoidation: Wed Nov 19 22:20:33 2014 
-## Purity corrected: Wed Nov 19 22:20:33 2014 
+## iTRAQ4 quantification by trapezoidation: Sat Nov 22 14:49:03 2014 
+## Purity corrected: Sat Nov 22 14:49:04 2014 
 ##  MSnbase version: 1.1.22
 ```
 
@@ -1388,10 +1392,10 @@ processingData(prt)
 ```
 ## - - - Processing information - - -
 ## Data loaded: Wed May 11 18:54:39 2011 
-## iTRAQ4 quantification by trapezoidation: Wed Nov 19 22:20:33 2014 
-## Purity corrected: Wed Nov 19 22:20:33 2014 
-## Normalised (quantiles): Wed Nov 19 22:20:33 2014 
-## Combined 55 features into 3 using sum: Wed Nov 19 22:20:33 2014 
+## iTRAQ4 quantification by trapezoidation: Sat Nov 22 14:49:03 2014 
+## Purity corrected: Sat Nov 22 14:49:04 2014 
+## Normalised (quantiles): Sat Nov 22 14:49:04 2014 
+## Combined 55 features into 3 using sum: Sat Nov 22 14:49:04 2014 
 ##  MSnbase version: 1.1.22
 ```
 
@@ -1522,8 +1526,8 @@ e
 ##   pubMedIds: http://www.ncbi.nlm.nih.gov/pubmed/22588121 
 ## Annotation:  
 ## - - - Processing information - - -
-## Subset [697,14][675,14] Wed Nov 19 22:20:34 2014 
-## Applied pp.msms.data preprocessing: Wed Nov 19 22:20:34 2014 
+## Subset [697,14][675,14] Sat Nov 22 14:49:04 2014 
+## Applied pp.msms.data preprocessing: Sat Nov 22 14:49:04 2014 
 ##  MSnbase version: 1.8.0
 ```
 
@@ -1559,6 +1563,12 @@ learning algorithms. Initially developed for microarray and
 [`pRoloc`](http://www.bioconductor.org/packages/release/bioc/html/pRoloc.html)
 package enables application of these algorithms to `MSnSet` data.
 
+### Classification
+
+The example below uses `knn` with the 5 closest neighbours as an
+illustration to classify proteins of unknown sub-cellular localisation
+to one of 9 possible organelles.
+
 
 ```r
 library("MLInterfaces")
@@ -1586,6 +1596,10 @@ ans
 ##  0.4000  1.0000  1.0000  0.9332  1.0000  1.0000
 ```
 
+### Clustering
+
+#### kmeans
+
 
 ```r
 kcl <- MLearn( ~ ., data = dunkley2006, kmeansI, centers = 12)
@@ -1606,6 +1620,8 @@ plot(kcl, exprs(dunkley2006))
 ```
 
 ![plot of chunk clust](figure/clust-1.png) 
+
+#### Hierarchical clustering
 
 
 ```r
@@ -1629,11 +1645,11 @@ plot(hcl, exprs(t(dunkley2006)))
 
 ![plot of chunk clust2](figure/clust2-1.png) 
 
-A wide range of classification algorithms are also available, as
-described in the `?MLearn` documentation page. The `pRoloc` package
-also uses `MSnSet` instances as input and ,while being conceived with
-the analysis of spatial/organelle proteomics data in mind, is
-applicable many use cases.
+A wide range of classification and clustering algorithms are also
+available, as described in the `?MLearn` documentation page. The
+`pRoloc` package also uses `MSnSet` instances as input and ,while
+being conceived with the analysis of spatial/organelle proteomics data
+in mind, is applicable many use cases.
 
 ## Annotation
 
@@ -1708,7 +1724,7 @@ vignettes.
 ## [13] annotate_1.44.0      XML_3.98-1.1         AnnotationDbi_1.28.1
 ## [16] GenomeInfoDb_1.2.3   IRanges_2.0.0        S4Vectors_0.4.0     
 ## [19] rpx_1.2.0            MSGFplus_1.0.3       MSnID_1.0.0         
-## [22] mzID_1.4.1           RforProteomics_1.5.2 MSnbase_1.14.0      
+## [22] mzID_1.4.1           RforProteomics_1.5.2 MSnbase_1.14.1      
 ## [25] BiocParallel_1.0.0   mzR_2.0.0            Rcpp_0.11.3         
 ## [28] Biobase_2.26.0       BiocGenerics_0.12.1  BiocInstaller_1.16.1
 ## [31] knitr_1.8           
@@ -1719,13 +1735,13 @@ vignettes.
 ##   [5] BBmisc_1.8                   biocViews_1.34.1            
 ##   [7] bitops_1.0-6                 BradleyTerry2_1.0-5         
 ##   [9] brew_1.0-6                   brglm_0.5-9                 
-##  [11] car_2.0-21                   caret_6.0-37                
+##  [11] car_2.0-22                   caret_6.0-37                
 ##  [13] Category_2.32.0              caTools_1.17.1              
 ##  [15] checkmate_1.5.0              chron_2.3-45                
 ##  [17] class_7.3-11                 codetools_0.2-9             
 ##  [19] colorspace_1.2-4             DBI_0.3.1                   
 ##  [21] digest_0.6.4                 doParallel_1.0.8            
-##  [23] e1071_1.6-4                  edgeR_3.8.2                 
+##  [23] e1071_1.6-4                  edgeR_3.8.4                 
 ##  [25] evaluate_0.5.5               fail_1.2                    
 ##  [27] FNN_1.1                      foreach_1.4.2               
 ##  [29] formatR_1.0                  gdata_2.13.3                
@@ -1743,7 +1759,7 @@ vignettes.
 ##  [53] MASS_7.3-35                  Matrix_1.1-4                
 ##  [55] mclust_4.4                   mime_0.2                    
 ##  [57] minqa_1.2.4                  munsell_0.4.2               
-##  [59] mvtnorm_1.0-0                nlme_3.1-118                
+##  [59] mvtnorm_1.0-1                nlme_3.1-118                
 ##  [61] nloptr_1.0.4                 nnet_7.3-8                  
 ##  [63] pcaMethods_1.56.0            pls_2.4-3                   
 ##  [65] plyr_1.8.1                   preprocessCore_1.28.0       

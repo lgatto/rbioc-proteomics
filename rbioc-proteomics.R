@@ -210,7 +210,7 @@ cmd
 ## library("MSGFplus")
 ## msgfpar <- msgfPar(database = fas,
 ##                instrument = 'HighRes',
-##                enzyme = 'Trypsin'm
+##                enzyme = 'Trypsin',
 ##                protocol = 'iTRAQ')
 ## runMSGF(msgfpar, mzf)
 
