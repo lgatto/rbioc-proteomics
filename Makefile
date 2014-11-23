@@ -33,11 +33,11 @@ rbioc-proteomics.pdf: rbioc-proteomics.md
 
 clean:
 	rm -f *~
-	rm -r .Rhistory
+	rm -f .Rhistory
 
 allclean:
 	rm -rf cache 
 	rm -f F063721.dat-mztab.txt TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzXML
 	rm -f erwinia_carotovora.fasta
-	rm -f rbioc-proteomics.md rbioc-proteomics.pdf rbioc-proteomics.html
+	rm -f rbioc-proteomics.pdf rbioc-proteomics.html
 
