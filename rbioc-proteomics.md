@@ -9,7 +9,7 @@ Using R and Bioconductor for proteomics data analysis
 
 [Atelier PROSPECTOM](http://prospectom.liglab.fr/atelier-2014/index.html) 19 Nov 2014, Grenoble, France
 
-Version of this document: 4fbd393 [2014-11-22 18:21:17 +0000]
+Version of this document: 788521a [2014-11-23 16:16:19 +0000]
 
 
 ## Setup
@@ -367,9 +367,30 @@ hd2[i, ]
 ```
 
 ```r
-pi <- peaks(ms, hd2[i, 1])
-mz <- hd2[i, "basePeakMZ"]
+head(pi <- peaks(ms, hd2[i, 1]))
+```
 
+```
+##          [,1]      [,2]
+## [1,] 100.5031  572248.9
+## [2,] 102.3174  463452.2
+## [3,] 112.0871 1068157.0
+## [4,] 114.9240  526959.1
+## [5,] 119.4508  493112.7
+## [6,] 120.0810 2219061.0
+```
+
+```r
+mz <- hd2[i, "basePeakMZ"]
+mz
+```
+
+```
+## [1] 859.5032
+```
+
+
+```r
 par(mfrow = c(2, 2))
 plot(pi, type = "h", main = paste("Acquisition", i))
 plot(pi, type = "h", xlim = c(mz-0.5, mz+0.5))
@@ -379,7 +400,7 @@ plot(pj, type = "l", main = paste("Acquisition", 100))
 plot(pj, type = "l", xlim = c(536,540))
 ```
 
-<img src="figure/ex_raw-1.png" title="plot of chunk ex_raw" alt="plot of chunk ex_raw" style="display: block; margin: auto;" />
+![plot of chunk ex_raw_fig](figure/ex_raw_fig-1.png) 
 
 > Read the `MSnbase::MSmap` manual and look at the example to learn
 > how the `mzR` raw data support can be exploited to generate maps of
@@ -486,7 +507,7 @@ system.time({
 
 ```
 ##    user  system elapsed 
-##  31.034   0.096  31.217
+##  45.076   0.188  45.541
 ```
 
 ```r
@@ -561,7 +582,7 @@ system.time({
 
 ```
 ##    user  system elapsed 
-##   0.321   0.001   0.323
+##   0.477   0.002   0.487
 ```
 
 ```r
@@ -860,7 +881,7 @@ msexp
 ##  MSn M/Z range: 100 2016.66 
 ##  MSn retention times: 25:1 - 25:2 minutes
 ## - - - Processing information - - -
-## Data loaded: Sat Nov 22 18:23:18 2014 
+## Data loaded: Sun Nov 23 16:29:14 2014 
 ##  MSnbase version: 1.14.1 
 ## - - - Meta data  - - -
 ## phenoData
@@ -1033,8 +1054,8 @@ msexp[1:3]
 ##  MSn M/Z range: 100 2016.66 
 ##  MSn retention times: 25:1 - 25:2 minutes
 ## - - - Processing information - - -
-## Data loaded: Sat Nov 22 18:23:18 2014 
-## Data [numerically] subsetted 3 spectra: Sat Nov 22 18:23:19 2014 
+## Data loaded: Sun Nov 23 16:29:14 2014 
+## Data [numerically] subsetted 3 spectra: Sun Nov 23 16:29:15 2014 
 ##  MSnbase version: 1.14.1 
 ## - - - Meta data  - - -
 ## phenoData
@@ -1126,8 +1147,8 @@ processingData(msset)
 
 ```
 ## - - - Processing information - - -
-## Data loaded: Sat Nov 22 18:23:18 2014 
-## iTRAQ4 quantification by trapezoidation: Sat Nov 22 18:23:20 2014 
+## Data loaded: Sun Nov 23 16:29:14 2014 
+## iTRAQ4 quantification by trapezoidation: Sun Nov 23 16:29:16 2014 
 ##  MSnbase version: 1.14.1
 ```
 
@@ -1216,7 +1237,7 @@ mztf <- pxget(px, pxfiles(px)[2])
 ## experimentData: use 'experimentData(object)'
 ## Annotation:  
 ## - - - Processing information - - -
-## mzTab read: Sat Nov 22 18:23:24 2014 
+## mzTab read: Sun Nov 23 16:29:19 2014 
 ##  MSnbase version: 1.14.1
 ```
 
@@ -1329,8 +1350,8 @@ processingData(qnt.crct)
 ```
 ## - - - Processing information - - -
 ## Data loaded: Wed May 11 18:54:39 2011 
-## iTRAQ4 quantification by trapezoidation: Sat Nov 22 18:23:26 2014 
-## Purity corrected: Sat Nov 22 18:23:26 2014 
+## iTRAQ4 quantification by trapezoidation: Sun Nov 23 16:29:22 2014 
+## Purity corrected: Sun Nov 23 16:29:22 2014 
 ##  MSnbase version: 1.1.22
 ```
 
@@ -1392,10 +1413,10 @@ processingData(prt)
 ```
 ## - - - Processing information - - -
 ## Data loaded: Wed May 11 18:54:39 2011 
-## iTRAQ4 quantification by trapezoidation: Sat Nov 22 18:23:26 2014 
-## Purity corrected: Sat Nov 22 18:23:26 2014 
-## Normalised (quantiles): Sat Nov 22 18:23:26 2014 
-## Combined 55 features into 3 using sum: Sat Nov 22 18:23:26 2014 
+## iTRAQ4 quantification by trapezoidation: Sun Nov 23 16:29:22 2014 
+## Purity corrected: Sun Nov 23 16:29:22 2014 
+## Normalised (quantiles): Sun Nov 23 16:29:22 2014 
+## Combined 55 features into 3 using sum: Sun Nov 23 16:29:22 2014 
 ##  MSnbase version: 1.1.22
 ```
 
@@ -1526,8 +1547,8 @@ e
 ##   pubMedIds: http://www.ncbi.nlm.nih.gov/pubmed/22588121 
 ## Annotation:  
 ## - - - Processing information - - -
-## Subset [697,14][675,14] Sat Nov 22 18:23:27 2014 
-## Applied pp.msms.data preprocessing: Sat Nov 22 18:23:27 2014 
+## Subset [697,14][675,14] Sun Nov 23 16:29:23 2014 
+## Applied pp.msms.data preprocessing: Sun Nov 23 16:29:23 2014 
 ##  MSnbase version: 1.8.0
 ```
 
@@ -1661,7 +1682,7 @@ such as
 [`biomaRt`](http://bioconductor.org/packages/release/bioc/html/biomaRt.html),
 [`GO.db`](http://www.bioconductor.org/packages/release/data/annotation/html/GO.db.html),
 organism specific annotations, .. are directly relevant to the
-analysis of proteomics data. A total of 93 ontologies, including
+analysis of proteomics data. A total of 88 ontologies, including
 some proteomics-centred annotations such as the PSI Mass Spectrometry
 Ontology, Molecular Interaction (PSI MI 2.5) or Protein Modifications
 are available through the

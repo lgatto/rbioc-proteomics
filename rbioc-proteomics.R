@@ -107,13 +107,16 @@ dim(hd)
 names(hd)
 
 
-## ----, ex_raw, fig.align='center'----------------------------------------
+## ----, ex_raw------------------------------------------------------------
 hd2 <- hd[hd$msLevel == 2, ]
 i <- which.max(hd2$basePeakIntensity)
 hd2[i, ]
-pi <- peaks(ms, hd2[i, 1])
+head(pi <- peaks(ms, hd2[i, 1]))
 mz <- hd2[i, "basePeakMZ"]
+mz
 
+
+## ----, ex_raw_fig--------------------------------------------------------
 par(mfrow = c(2, 2))
 plot(pi, type = "h", main = paste("Acquisition", i))
 plot(pi, type = "h", xlim = c(mz-0.5, mz+0.5))
