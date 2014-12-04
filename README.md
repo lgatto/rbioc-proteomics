@@ -1,7 +1,6 @@
-This repository contains
-[material](https://github.com/lgatto/rbioc-proteomics/blob/master/rbioc-proteomics.md)
-to teach computational proteomics using R and Bioconductor
-packages. It is based on content from the
+This repository contains material to teach/illustrate computational
+proteomics using R and Bioconductor packages. It is based on content
+from the
 [`RforProteomcis`](http://www.bioconductor.org/packages/release/data/experiment/html/RforProteomics.html)
 package.
 
