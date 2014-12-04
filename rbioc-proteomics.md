@@ -7,9 +7,7 @@ Using R and Bioconductor for proteomics data analysis
 **Laurent Gatto**
 [Computational Proteomics Unit](http://cpu.sysbiol.cam.ac.uk)
 
-[Atelier PROSPECTOM](http://prospectom.liglab.fr/atelier-2014/index.html) 19 Nov 2014, Grenoble, France
-
-Version of this document: 788521a [2014-11-23 16:16:19 +0000]
+Version of this document: 39e04c5 [2014-11-23 16:33:35 +0000]
 
 
 ## Setup
@@ -32,8 +30,22 @@ library("MLInterfaces")
 library("pRoloc")
 library("pRolocdata")
 library("rTANDEM")
+```
+
+```
+## Error in library("rTANDEM"): there is no package called 'rTANDEM'
+```
+
+```r
 library("MSGFplus")
 library("MSGFgui")
+```
+
+```
+## Error in library("MSGFgui"): there is no package called 'MSGFgui'
+```
+
+```r
 library("rols")
 library("hpar")
 ```
@@ -42,7 +54,6 @@ The most convenient way to install all the tutorials requirement (and
 more related content), is to install
 [`RforProteomics`](http://www.bioconductor.org/packages/release/data/experiment/html/RforProteomics.html)
 with all its dependencies.
-
 
 
 ```r
@@ -82,7 +93,7 @@ package also contains relevant material.
 
 
 
-In Bioconductor version 3.0, there are respectively 65
+In Bioconductor version 3.1, there are respectively 66
 [proteomics](http://bioconductor.org/packages/release/BiocViews.html#___Proteomics),
 44
 [mass spectrometry software packages](http://bioconductor.org/packages/release/BiocViews.html#___MassSpectrometry)
@@ -138,22 +149,27 @@ pxannounced()
 
 ```
 ##     Data.Set    Publication.Data             Message
-## 1  PXD001159 2014-11-20 11:26:30                 New
-## 2  PXD001386 2014-11-20 10:50:37                 New
-## 3  PXD001091 2014-11-20 09:49:23                 New
-## 4  PXD001031 2014-11-20 09:35:05                 New
-## 5  PXD000413 2014-11-20 09:04:45                 New
-## 6  PXD001283 2014-11-19 08:44:40                 New
-## 7  PXD001301 2014-11-19 08:42:01                 New
-## 8  PXD000837 2014-11-19 08:30:45 Updated information
-## 9  PXD000715 2014-11-18 16:34:39 Updated information
-## 10 PXD000837 2014-11-18 16:30:02 Updated information
-## 11 PXD001354 2014-11-18 16:29:15 Updated information
-## 12 PXD000627 2014-11-18 16:28:07 Updated information
-## 13 PXD001125 2014-11-18 16:27:02 Updated information
-## 14 PXD001045 2014-11-18 16:26:04 Updated information
-## 15 PXD001260 2014-11-18 16:24:55 Updated information
+## 1  PXD000402 2014-12-04 15:53:18                 New
+## 2  PXD001205 2014-12-04 11:19:40                 New
+## 3  PXD000853 2014-12-04 10:40:57                 New
+## 4  PXD001259 2014-12-04 10:09:03                 New
+## 5  PXD000986 2014-12-04 10:00:18                 New
+## 6  PXD000543 2014-12-02 17:44:18                 New
+## 7  PXD001075 2014-12-02 17:43:40                 New
+## 8  PXD000834 2014-12-02 12:57:00                 New
+## 9  PXD001381 2014-12-02 11:21:30                 New
+## 10 PXD000801 2014-12-02 08:31:32 Updated information
+## 11 PXD000800 2014-12-02 08:31:27 Updated information
+## 12 PXD000798 2014-12-02 08:31:17 Updated information
+## 13 PXD000471 2014-12-02 08:31:06 Updated information
+## 14 PXD000758 2014-12-02 08:31:01 Updated information
+## 15 PXD000216 2014-12-02 08:30:30 Updated information
 ```
+
+Using the unique `PXD000001` identifier, we can retrieve the relevant
+metadata that will be stored in a `PXDataset` object. The names of the
+files available in this data can be retrieved with the `pxfiles`
+accessor function.
 
 
 ```r
@@ -210,8 +226,11 @@ pxref(px)
 ## [1] "Gatto L, Christoforou A. Using R and Bioconductor for proteomics data analysis. Biochim Biophys Acta. 2014 Jan;1844(1 Pt A):42-51. Review"
 ```
 
-Data files can then be downloaded with the `pxget` function as
-illustrated below. 
+Data files can then be downloaded with the `pxget` function. Below, we
+retrieve the sixth file, TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzXML. The file is downloaded in
+the working directory and the name of the file is return by the
+function and stored in the `mzf` variable for later use.
+
 
 
 ```r
@@ -286,16 +305,19 @@ table(sub("_.+$", "", rawf))
 ## Handling raw MS data
 
 The `mzR` package provides an interface to the
-[proteowizard](http://proteowizard.sourceforge.net/) code base,
-the legacy RAMP is a non-sequential parser and other C/C++ code to
-access various raw data files, such as `mzML`, `mzXML`, `netCDF`, and
-`mzData`. The data is accessed on-disk, i.e it does not get loaded
-entirely in memory by default. The three main functions are
-`openMSfile` to create a file handle to a raw data file, `header` to
-extract metadata about the spectra contained in the file and `peaks`
-to extract one or multiple spectra of interest. Other functions such
-as `instrumentInfo`, or `runInfo` can be used to gather general
-information about a run.
+[proteowizard](http://proteowizard.sourceforge.net/) C/C++ code base
+to access various raw data files, such as `mzML`, `mzXML`, `netCDF`,
+and `mzData`. The data is accessed on-disk, i.e it is not loaded
+entirely in memory by default but only when explicitly requested. The
+three main functions are `openMSfile` to create a file handle to a raw
+data file, `header` to extract metadata about the spectra contained in
+the file and `peaks` to extract one or multiple spectra of
+interest. Other functions such as `instrumentInfo`, or `runInfo` can
+be used to gather general information about a run.
+
+Below, we access the raw data file downloaded in the previous section
+and open a file handle that will allow us to extract data and metadata
+of interest.
 
 
 ```r
@@ -337,6 +359,46 @@ names(hd)
 ## [19] "mergedResultScanNum"      "mergedResultStartScanNum"
 ## [21] "mergedResultEndScanNum"
 ```
+
+We can extract metadata and scan data for scan 1000 as follows:
+
+
+```r
+hd[1000, ]
+```
+
+```
+##      seqNum acquisitionNum msLevel polarity peaksCount totIonCurrent
+## 1000   1000           1000       2        1        274       1048554
+##      retentionTime basePeakMZ basePeakIntensity collisionEnergy
+## 1000       1106.92    136.061            164464               0
+##      ionisationEnergy    lowMZ   highMZ precursorScanNum precursorMZ
+## 1000                0 104.5467 1370.758              992    683.0817
+##      precursorCharge precursorIntensity mergedScan mergedResultScanNum
+## 1000               2           689443.7          0                   0
+##      mergedResultStartScanNum mergedResultEndScanNum
+## 1000                        0                      0
+```
+
+```r
+head(peaks(ms, 1000))
+```
+
+```
+##          [,1]     [,2]
+## [1,] 104.5467 308.9326
+## [2,] 104.5684 308.6961
+## [3,] 108.8340 346.7183
+## [4,] 109.3928 365.1236
+## [5,] 110.0345 616.7905
+## [6,] 110.0703 429.1975
+```
+
+```r
+plot(peaks(ms, 1000), type = "h")
+```
+
+![plot of chunk simpleplot](figure/simpleplot-1.png) 
 
 #### Exercise
 
@@ -402,10 +464,63 @@ plot(pj, type = "l", xlim = c(536,540))
 
 ![plot of chunk ex_raw_fig](figure/ex_raw_fig-1.png) 
 
+#### Exercise
+
 > Read the `MSnbase::MSmap` manual and look at the example to learn
 > how the `mzR` raw data support can be exploited to generate maps of
 > slides of raw MS data. (Note that the `hd` variable containing the
 > raw data header was missing in `MSnbase` version < `1.14.1`.)
+
+#### Solution
+
+Below we reproduce the example from the `MSmap` function from the
+`MSnbase` package to plot a specific slice of the raw data using the
+`mzR` functions we have just described.
+
+
+```r
+## a set of spectra of interest: MS1 spectra eluted
+## between 30 and 35 minutes retention time
+ms1 <- which(hd$msLevel == 1)
+rtsel <- hd$retentionTime[ms1] / 60 > 30 &
+    hd$retentionTime[ms1] / 60 < 35
+
+## the map
+M <- MSmap(ms, ms1[rtsel], 521, 523, .005, hd)
+```
+
+```
+## 1
+```
+
+```r
+plot(M, aspect = 1, allTicks = FALSE)
+```
+
+![plot of chunk msmap](figure/msmap-1.png) 
+
+```r
+plot3D(M)
+```
+
+![plot of chunk msmap](figure/msmap-2.png) 
+
+```r
+## With some MS2 spectra
+i <- ms1[which(rtsel)][1]
+j <- ms1[which(rtsel)][2]
+M2 <- MSmap(ms, i:j, 100, 1000, 1, hd)
+```
+
+```
+## 1
+```
+
+```r
+plot3D(M2)
+```
+
+![plot of chunk msmap](figure/msmap-3.png) 
 
 ## Handling identification data
 
@@ -426,7 +541,7 @@ basename(f)
 ```
 
 ```
-## [1] "TMT_Erwinia.mzid.gz"
+## [1] "TMT_Erwinia.mzid"
 ```
 
 ```r
@@ -434,7 +549,7 @@ id <- mzID(f)
 ```
 
 ```
-## reading TMT_Erwinia.mzid.gz... DONE!
+## reading TMT_Erwinia.mzid... DONE!
 ```
 
 ```r
@@ -483,10 +598,13 @@ xyplot(plength ~ npep | bins, data = x)
 
 ![plot of chunk ex_id](figure/ex_id-1.png) 
 
+#### Exercise
 
 > The `mzR` package also support fast parsing of `mzIdentML` files
 > with the `openIDfile` function. Compare it, it terms of output and
 > speed with `mzID`.
+
+#### Solution
 
 
 ```r
@@ -502,12 +620,12 @@ system.time({
 ```
 
 ```
-## reading TMT_Erwinia.mzid.gz... DONE!
+## reading TMT_Erwinia.mzid... DONE!
 ```
 
 ```
 ##    user  system elapsed 
-##  45.076   0.188  45.541
+##  17.998   0.076  18.115
 ```
 
 ```r
@@ -582,7 +700,7 @@ system.time({
 
 ```
 ##    user  system elapsed 
-##   0.477   0.002   0.487
+##   0.302   0.002   0.305
 ```
 
 ```r
@@ -668,7 +786,6 @@ MSGFgui()
 > Search TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzXML against the fasta file from `PXD000001` using, for
 > example, `MSGFplus`/`MSGFgui`.
 
-
 #### Solution
 
 1. Get the fasta database:
@@ -683,6 +800,14 @@ fas <- pxget(px, pxfiles(px)[8])
 ## erwinia_carotovora.fasta already present.
 ```
 
+```r
+basename(fas)
+```
+
+```
+## [1] "erwinia_carotovora.fasta"
+```
+
 2. One could run MSGF+ from the command-line directly from `R`:
 
 
@@ -694,7 +819,7 @@ cmd
 ```
 
 ```
-## [1] "java -jar /home/lg390/R/x86_64-unknown-linux-gnu-library/3.1/MSGFplus/MSGFPlus/MSGFPlus.jar -protocol 2 -inst 1 -s TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzXML -d erwinia_carotovora.fasta"
+## [1] "java -jar /home/lg390/R/x86_64-unknown-linux-gnu-library/3.2/MSGFplus/MSGFPlus/MSGFPlus.jar -protocol 2 -inst 1 -s TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzXML -d erwinia_carotovora.fasta"
 ```
 
 
@@ -702,19 +827,29 @@ cmd
 system(cmd)
 ```
 
-or, use `MSGFplus`:
+3. Use `MSGFplus`:
 
 
 ```r
 library("MSGFplus")
 msgfpar <- msgfPar(database = fas,
-               instrument = 'HighRes',
-               enzyme = 'Trypsin',
-               protocol = 'iTRAQ')
-runMSGF(msgfpar, mzf)
+                   instrument = 'HighRes',
+                   tda = TRUE,
+                   enzyme = 'Trypsin',
+                   protocol = 'iTRAQ')
+idres <- runMSGF(msgfpar, mzf, memory=1000)
+idres
+## identification file (needed below)
+basename(files(idres)$id)
 ```
 
-or, through the graphical user interface:
+(Note that in the `runMSGF` call above, I explicitly reduce the memory
+allocated to the java virtual machine to 3.5GB. In general, there is
+no need to specify this argument, unless you experience an error
+regarding the *maximum heap size*).
+
+
+4. Through the graphical user interface:
 
 
 ```r
@@ -730,7 +865,6 @@ package can be used for post-search filtering of MS/MS
 identifications. One starts with the construction of an `MSnID`
 object that is populated with identification results that can be
 imported from a `data.frame` or from `mzIdenML` files.
-
 
 
 ```r
@@ -753,66 +887,138 @@ msnid <- MSnID(".")
 ```
 
 ```r
-PSMresults <- read.delim(system.file("extdata", "human_brain.txt",
-                                     package="MSnID"),
-                         stringsAsFactors=FALSE)
-psms(msnid) <- PSMresults
+msnid <- read_mzIDs(msnid,
+                    "TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzid")
+```
+
+```
+## Error: all(sapply(mzids, file.exists)) is not TRUE
+```
+
+```r
 show(msnid)
 ```
 
 ```
 ## MSnID object
 ## Working directory: "."
-## #Spectrum Files:  1 
-## #PSMs: 997 at 37 % FDR
-## #peptides: 687 at 57 % FDR
-## #accessions: 665 at 65 % FDR
+## #Spectrum Files:  0
 ```
 
 The package then enables to define, optimise and apply filtering based
 for example on missed cleavages, identification scores, precursor mass
-errors, etc. and assess PSM, peptide and protein FDR levels.
+errors, etc. and assess PSM, peptide and protein FDR levels. Below, we
+start by apply a correction of monoisotopic peaks (see
+`?correct_peak_selection` for details) and define two variables to be
+used for identification filtering.
 
 
 ```r
-msnid$msmsScore <- -log10(msnid$`MS.GF.SpecEValue`)
-msnid$absParentMassErrorPPM <- abs(mass_measurement_error(msnid))
+msnid <- correct_peak_selection(msnid)
+msnid$msmsScore <- -log10(msnid$`MS-GF:SpecEValue`)
+```
 
+```
+## Error in log10(msnid$`MS-GF:SpecEValue`): non-numeric argument to mathematical function
+```
+
+```r
+msnid$absParentMassErrorPPM <- abs(mass_measurement_error(msnid))
+```
+
+As shown below, this particular spiked-in data set displays few high
+scoring non-decoy hits
+
+
+```
+## Error in UseMethod("densityplot"): no applicable method for 'densityplot' applied to an object of class "NULL"
+```
+
+We define a filter object, assigning arbitrary threshold and evaluate
+it on the `msnid` data
+
+
+
+```r
 filtObj <- MSnIDFilter(msnid)
 filtObj$absParentMassErrorPPM <- list(comparison="<", threshold=5.0)
 filtObj$msmsScore <- list(comparison=">", threshold=8.0)
-show(filtObj)
+```
+
+```
+## Error in `$<-`(`*tmp*`, "msmsScore", value = structure(list(comparison = ">", : msmsScore is not a valid parameter!
+## See parameter names method for MSnID object.
+## Valid names are:
+## experimentalMassToCharge
+## absParentMassErrorPPM
+```
+
+```r
+filtObj
 ```
 
 ```
 ## MSnIDFilter object
-## (absParentMassErrorPPM < 5) & (msmsScore > 8)
+## (absParentMassErrorPPM < 5)
 ```
+
+```r
+evaluate_filter(msnid, filtObj)
+```
+
+```
+## Error: is.logical(object@psms$isDecoy) is not TRUE
+```
+
+We can also optimise the filtering with a target protein FDR value of
+0.01
+
 
 ```r
 filtObj.grid <- optimize_filter(filtObj, msnid, fdr.max=0.01,
-                                method="Grid", level="peptide",
-                                n.iter=500)
-show(filtObj.grid)
+                                method="Grid", level="PSM",
+                                n.iter=50000)
 ```
 
 ```
-## MSnIDFilter object
-## (absParentMassErrorPPM < 2.3) & (msmsScore > 7.8)
+## Error in `[.data.table`(msnidObj@psms, , c("isDecoy", names(filterObj)), : column(s) not found: isDecoy
 ```
 
 ```r
+filtObj.grid
+```
+
+```
+## Error in eval(expr, envir, enclos): object 'filtObj.grid' not found
+```
+
+```r
+evaluate_filter(msnid, filtObj.grid)
+```
+
+```
+## Error in apply_filter(object, filter): error in evaluating the argument 'filterObj' in selecting a method for function 'apply_filter': Error: object 'filtObj.grid' not found
+```
+
+We can now apply the filter to the data
+
+
+```r
 msnid <- apply_filter(msnid, filtObj.grid)
-show(msnid)
+```
+
+```
+## Error in apply_filter(msnid, filtObj.grid): error in evaluating the argument 'filterObj' in selecting a method for function 'apply_filter': Error: object 'filtObj.grid' not found
+```
+
+```r
+msnid
 ```
 
 ```
 ## MSnID object
 ## Working directory: "."
-## #Spectrum Files:  1 
-## #PSMs: 346 at 0 % FDR
-## #peptides: 160 at 0 % FDR
-## #accessions: 132 at 0 % FDR
+## #Spectrum Files:  0
 ```
 
 The resulting data can be exported to a `data.frame` or to a dedicated
@@ -881,8 +1087,8 @@ msexp
 ##  MSn M/Z range: 100 2016.66 
 ##  MSn retention times: 25:1 - 25:2 minutes
 ## - - - Processing information - - -
-## Data loaded: Sun Nov 23 16:29:14 2014 
-##  MSnbase version: 1.14.1 
+## Data loaded: Thu Dec  4 18:47:49 2014 
+##  MSnbase version: 1.15.3 
 ## - - - Meta data  - - -
 ## phenoData
 ##   rowNames: 1
@@ -909,6 +1115,14 @@ length(msexp)
 
 ```
 ## [1] 5
+```
+
+```r
+msnexp[1:2]
+```
+
+```
+## Error in eval(expr, envir, enclos): object 'msnexp' not found
 ```
 
 ```r
@@ -1054,9 +1268,9 @@ msexp[1:3]
 ##  MSn M/Z range: 100 2016.66 
 ##  MSn retention times: 25:1 - 25:2 minutes
 ## - - - Processing information - - -
-## Data loaded: Sun Nov 23 16:29:14 2014 
-## Data [numerically] subsetted 3 spectra: Sun Nov 23 16:29:15 2014 
-##  MSnbase version: 1.14.1 
+## Data loaded: Thu Dec  4 18:47:49 2014 
+## Data [numerically] subsetted 3 spectra: Thu Dec  4 18:47:49 2014 
+##  MSnbase version: 1.15.3 
 ## - - - Meta data  - - -
 ## phenoData
 ##   rowNames: 1
@@ -1147,9 +1361,9 @@ processingData(msset)
 
 ```
 ## - - - Processing information - - -
-## Data loaded: Sun Nov 23 16:29:14 2014 
-## iTRAQ4 quantification by trapezoidation: Sun Nov 23 16:29:16 2014 
-##  MSnbase version: 1.14.1
+## Data loaded: Thu Dec  4 18:47:49 2014 
+## iTRAQ4 quantification by trapezoidation: Thu Dec  4 18:47:50 2014 
+##  MSnbase version: 1.15.3
 ```
 
 Other MS2 quantitation methods available in `quantify` include the
@@ -1237,8 +1451,8 @@ mztf <- pxget(px, pxfiles(px)[2])
 ## experimentData: use 'experimentData(object)'
 ## Annotation:  
 ## - - - Processing information - - -
-## mzTab read: Sun Nov 23 16:29:19 2014 
-##  MSnbase version: 1.14.1
+## mzTab read: Thu Dec  4 18:47:52 2014 
+##  MSnbase version: 1.15.3
 ```
 
 It is also possible to import arbitrary spreadsheets as `MSnSet`
@@ -1350,8 +1564,8 @@ processingData(qnt.crct)
 ```
 ## - - - Processing information - - -
 ## Data loaded: Wed May 11 18:54:39 2011 
-## iTRAQ4 quantification by trapezoidation: Sun Nov 23 16:29:22 2014 
-## Purity corrected: Sun Nov 23 16:29:22 2014 
+## iTRAQ4 quantification by trapezoidation: Thu Dec  4 18:47:54 2014 
+## Purity corrected: Thu Dec  4 18:47:54 2014 
 ##  MSnbase version: 1.1.22
 ```
 
@@ -1413,10 +1627,10 @@ processingData(prt)
 ```
 ## - - - Processing information - - -
 ## Data loaded: Wed May 11 18:54:39 2011 
-## iTRAQ4 quantification by trapezoidation: Sun Nov 23 16:29:22 2014 
-## Purity corrected: Sun Nov 23 16:29:22 2014 
-## Normalised (quantiles): Sun Nov 23 16:29:22 2014 
-## Combined 55 features into 3 using sum: Sun Nov 23 16:29:22 2014 
+## iTRAQ4 quantification by trapezoidation: Thu Dec  4 18:47:54 2014 
+## Purity corrected: Thu Dec  4 18:47:54 2014 
+## Normalised (quantiles): Thu Dec  4 18:47:54 2014 
+## Combined 55 features into 3 using sum: Thu Dec  4 18:47:54 2014 
 ##  MSnbase version: 1.1.22
 ```
 
@@ -1547,8 +1761,8 @@ e
 ##   pubMedIds: http://www.ncbi.nlm.nih.gov/pubmed/22588121 
 ## Annotation:  
 ## - - - Processing information - - -
-## Subset [697,14][675,14] Sun Nov 23 16:29:23 2014 
-## Applied pp.msms.data preprocessing: Sun Nov 23 16:29:23 2014 
+## Subset [697,14][675,14] Thu Dec  4 18:47:55 2014 
+## Applied pp.msms.data preprocessing: Thu Dec  4 18:47:55 2014 
 ##  MSnbase version: 1.8.0
 ```
 
@@ -1682,7 +1896,7 @@ such as
 [`biomaRt`](http://bioconductor.org/packages/release/bioc/html/biomaRt.html),
 [`GO.db`](http://www.bioconductor.org/packages/release/data/annotation/html/GO.db.html),
 organism specific annotations, .. are directly relevant to the
-analysis of proteomics data. A total of 88 ontologies, including
+analysis of proteomics data. A total of 92 ontologies, including
 some proteomics-centred annotations such as the PSI Mass Spectrometry
 Ontology, Molecular Interaction (PSI MI 2.5) or Protein Modifications
 are available through the
@@ -1730,7 +1944,7 @@ vignettes.
 
 
 ```
-## R version 3.1.1 Patched (2014-09-02 r66514)
+## R Under development (unstable) (2014-11-01 r66923)
 ## Platform: x86_64-unknown-linux-gnu (64-bit)
 ## 
 ## attached base packages:
@@ -1738,68 +1952,66 @@ vignettes.
 ## [8] methods   base     
 ## 
 ## other attached packages:
-##  [1] msmsTests_1.4.0      msmsEDA_1.4.0        lattice_0.20-29     
-##  [4] hpar_1.8.0           rols_1.8.0           MSGFgui_1.0.1       
-##  [7] rTANDEM_1.6.0        data.table_1.9.4     pRolocdata_1.5.2    
-## [10] pRoloc_1.7.1         MLInterfaces_1.46.0  cluster_1.15.3      
-## [13] annotate_1.44.0      XML_3.98-1.1         AnnotationDbi_1.28.1
-## [16] GenomeInfoDb_1.2.3   IRanges_2.0.0        S4Vectors_0.4.0     
-## [19] rpx_1.2.0            MSGFplus_1.0.3       MSnID_1.0.0         
-## [22] mzID_1.4.1           RforProteomics_1.5.2 MSnbase_1.14.1      
-## [25] BiocParallel_1.0.0   mzR_2.0.0            Rcpp_0.11.3         
-## [28] Biobase_2.26.0       BiocGenerics_0.12.1  BiocInstaller_1.16.1
-## [31] knitr_1.8           
+##  [1] msmsTests_1.5.0       msmsEDA_1.5.0         lattice_0.20-29      
+##  [4] hpar_1.9.1            rols_1.9.0            pRolocdata_1.5.2     
+##  [7] pRoloc_1.7.1          MLInterfaces_1.47.0   cluster_1.15.3       
+## [10] annotate_1.45.0       XML_3.98-1.1          AnnotationDbi_1.29.10
+## [13] GenomeInfoDb_1.3.7    IRanges_2.1.21        S4Vectors_0.5.11     
+## [16] rpx_1.3.0             MSGFplus_1.1.2        MSnID_1.1.2          
+## [19] mzID_1.5.1            RforProteomics_1.5.2  MSnbase_1.15.3       
+## [22] BiocParallel_1.1.9    mzR_2.1.1             Rcpp_0.11.3          
+## [25] Biobase_2.27.0        BiocGenerics_0.13.2   BiocInstaller_1.17.1 
+## [28] knitr_1.8            
 ## 
 ## loaded via a namespace (and not attached):
-##   [1] affy_1.44.0                  affyio_1.34.0               
-##   [3] base64enc_0.1-2              BatchJobs_1.5               
-##   [5] BBmisc_1.8                   biocViews_1.34.1            
-##   [7] bitops_1.0-6                 BradleyTerry2_1.0-5         
-##   [9] brew_1.0-6                   brglm_0.5-9                 
-##  [11] car_2.0-22                   caret_6.0-37                
-##  [13] Category_2.32.0              caTools_1.17.1              
-##  [15] checkmate_1.5.0              chron_2.3-45                
-##  [17] class_7.3-11                 codetools_0.2-9             
-##  [19] colorspace_1.2-4             DBI_0.3.1                   
-##  [21] digest_0.6.4                 doParallel_1.0.8            
-##  [23] e1071_1.6-4                  edgeR_3.8.4                 
-##  [25] evaluate_0.5.5               fail_1.2                    
-##  [27] FNN_1.1                      foreach_1.4.2               
-##  [29] formatR_1.0                  gdata_2.13.3                
-##  [31] genefilter_1.48.1            ggplot2_1.0.0               
-##  [33] gplots_2.14.2                graph_1.44.0                
-##  [35] grid_3.1.1                   gridSVG_1.4-0               
-##  [37] GSEABase_1.28.0              gtable_0.1.2                
-##  [39] gtools_3.4.1                 htmltools_0.2.6             
-##  [41] httpuv_1.3.2                 impute_1.40.0               
-##  [43] interactiveDisplay_1.4.0     interactiveDisplayBase_1.4.0
-##  [45] iterators_1.0.7              kernlab_0.9-19              
-##  [47] KernSmooth_2.23-13           labeling_0.3                
-##  [49] limma_3.22.1                 lme4_1.1-7                  
-##  [51] lpSolve_5.6.10               MALDIquant_1.11             
-##  [53] MASS_7.3-35                  Matrix_1.1-4                
-##  [55] mclust_4.4                   mime_0.2                    
-##  [57] minqa_1.2.4                  munsell_0.4.2               
-##  [59] mvtnorm_1.0-1                nlme_3.1-118                
-##  [61] nloptr_1.0.4                 nnet_7.3-8                  
-##  [63] pcaMethods_1.56.0            pls_2.4-3                   
-##  [65] plyr_1.8.1                   preprocessCore_1.28.0       
-##  [67] proto_0.3-10                 proxy_0.4-13                
-##  [69] qvalue_1.40.0                R6_2.0.1                    
-##  [71] randomForest_4.6-10          RBGL_1.42.0                 
-##  [73] R.cache_0.10.0               RColorBrewer_1.0-5          
-##  [75] RCurl_1.95-4.3               rda_1.0.2-2                 
-##  [77] reshape2_1.4                 rJava_0.9-6                 
-##  [79] RJSONIO_1.3-0                R.methodsS3_1.6.1           
-##  [81] R.oo_1.18.0                  rpart_4.1-8                 
-##  [83] RSQLite_1.0.0                RUnit_0.4.27                
-##  [85] R.utils_1.34.0               sampling_2.6                
-##  [87] scales_0.2.4                 sendmailR_1.2-1             
-##  [89] sfsmisc_1.0-26               shiny_0.10.2.1              
-##  [91] shinyFiles_0.4.0             splines_3.1.1               
-##  [93] SSOAP_0.8-0                  stringr_0.6.2               
-##  [95] survival_2.37-7              tools_3.1.1                 
-##  [97] vsn_3.34.0                   xlsx_0.5.7                  
-##  [99] xlsxjars_0.6.1               XMLSchema_0.7-2             
-## [101] xtable_1.7-4                 zlibbioc_1.12.0
+##  [1] affy_1.45.0                  affyio_1.35.0               
+##  [3] base64enc_0.1-2              BatchJobs_1.5               
+##  [5] BBmisc_1.8                   biocViews_1.35.8            
+##  [7] bitops_1.0-6                 BradleyTerry2_1.0-5         
+##  [9] brew_1.0-6                   brglm_0.5-9                 
+## [11] car_2.0-22                   caret_6.0-37                
+## [13] Category_2.33.0              caTools_1.17.1              
+## [15] checkmate_1.5.0              chron_2.3-45                
+## [17] class_7.3-11                 codetools_0.2-9             
+## [19] colorspace_1.2-4             data.table_1.9.4            
+## [21] DBI_0.3.1                    digest_0.6.4                
+## [23] doParallel_1.0.8             e1071_1.6-4                 
+## [25] edgeR_3.9.9                  evaluate_0.5.5              
+## [27] fail_1.2                     FNN_1.1                     
+## [29] foreach_1.4.2                formatR_1.0                 
+## [31] gdata_2.13.3                 genefilter_1.49.2           
+## [33] ggplot2_1.0.0                gplots_2.14.2               
+## [35] graph_1.45.0                 grid_3.2.0                  
+## [37] gridSVG_1.4-0                GSEABase_1.29.0             
+## [39] gtable_0.1.2                 gtools_3.4.1                
+## [41] htmltools_0.2.6              httpuv_1.3.2                
+## [43] impute_1.41.0                interactiveDisplay_1.5.0    
+## [45] interactiveDisplayBase_1.5.1 iterators_1.0.7             
+## [47] kernlab_0.9-19               KernSmooth_2.23-13          
+## [49] labeling_0.3                 limma_3.23.2                
+## [51] lme4_1.1-7                   lpSolve_5.6.10              
+## [53] MALDIquant_1.11              MASS_7.3-35                 
+## [55] Matrix_1.1-4                 mclust_4.4                  
+## [57] mime_0.2                     minqa_1.2.4                 
+## [59] munsell_0.4.2                mvtnorm_1.0-1               
+## [61] nlme_3.1-118                 nloptr_1.0.4                
+## [63] nnet_7.3-8                   pcaMethods_1.57.0           
+## [65] pls_2.4-3                    plyr_1.8.1                  
+## [67] preprocessCore_1.29.0        proto_0.3-10                
+## [69] proxy_0.4-13                 qvalue_1.41.0               
+## [71] R6_2.0.1                     randomForest_4.6-10         
+## [73] RBGL_1.43.0                  R.cache_0.10.0              
+## [75] RColorBrewer_1.0-5           RCurl_1.95-4.3              
+## [77] rda_1.0.2-2                  reshape2_1.4                
+## [79] RJSONIO_1.3-0                R.methodsS3_1.6.1           
+## [81] R.oo_1.18.0                  rpart_4.1-8                 
+## [83] RSQLite_1.0.0                RUnit_0.4.27                
+## [85] R.utils_1.34.0               sampling_2.6                
+## [87] scales_0.2.4                 sendmailR_1.2-1             
+## [89] sfsmisc_1.0-26               shiny_0.10.2.1              
+## [91] splines_3.2.0                SSOAP_0.8-0                 
+## [93] stringr_0.6.2                survival_2.37-7             
+## [95] tools_3.2.0                  vsn_3.35.0                  
+## [97] XMLSchema_0.7-2              xtable_1.7-4                
+## [99] zlibbioc_1.13.0
 ```

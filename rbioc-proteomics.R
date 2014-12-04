@@ -107,6 +107,12 @@ dim(hd)
 names(hd)
 
 
+## ----, simpleplot--------------------------------------------------------
+hd[1000, ]
+head(peaks(ms, 1000))
+plot(peaks(ms, 1000), type = "h")
+
+
 ## ----, ex_raw------------------------------------------------------------
 hd2 <- hd[hd$msLevel == 2, ]
 i <- which.max(hd2$basePeakIntensity)
@@ -124,6 +130,26 @@ plot(pi, type = "h", xlim = c(mz-0.5, mz+0.5))
 pj <- peaks(ms, 100)
 plot(pj, type = "l", main = paste("Acquisition", 100))
 plot(pj, type = "l", xlim = c(536,540))
+
+
+## ----, msmap-------------------------------------------------------------
+## a set of spectra of interest: MS1 spectra eluted
+## between 30 and 35 minutes retention time
+ms1 <- which(hd$msLevel == 1)
+rtsel <- hd$retentionTime[ms1] / 60 > 30 &
+    hd$retentionTime[ms1] / 60 < 35
+
+## the map
+M <- MSmap(ms, ms1[rtsel], 521, 523, .005, hd)
+
+plot(M, aspect = 1, allTicks = FALSE)
+plot3D(M)
+
+## With some MS2 spectra
+i <- ms1[which(rtsel)][1]
+j <- ms1[which(rtsel)][2]
+M2 <- MSmap(ms, i:j, 100, 1000, 1, hd)
+plot3D(M2)
 
 
 ## ----, id, cache=TRUE----------------------------------------------------
@@ -196,6 +222,7 @@ mzf <- "TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzXML"
 
 ## ----ex_getfas-----------------------------------------------------------
 fas <- pxget(px, pxfiles(px)[8])
+basename(fas)
 
 
 ## ----ex_msgfcmd----------------------------------------------------------
@@ -212,10 +239,14 @@ cmd
 ## ----ex_msgfplus, eval=FALSE---------------------------------------------
 ## library("MSGFplus")
 ## msgfpar <- msgfPar(database = fas,
-##                instrument = 'HighRes',
-##                enzyme = 'Trypsin',
-##                protocol = 'iTRAQ')
-## runMSGF(msgfpar, mzf)
+##                    instrument = 'HighRes',
+##                    tda = TRUE,
+##                    enzyme = 'Trypsin',
+##                    protocol = 'iTRAQ')
+## idres <- runMSGF(msgfpar, mzf, memory=1000)
+## idres
+## ## identification file (needed below)
+## basename(files(idres)$id)
 
 
 ## ----ex_msgfgui, eval=FALSE----------------------------------------------
@@ -226,28 +257,44 @@ cmd
 ## ----, msnid-------------------------------------------------------------
 library("MSnID")
 msnid <- MSnID(".")
-
-PSMresults <- read.delim(system.file("extdata", "human_brain.txt",
-                                     package="MSnID"),
-                         stringsAsFactors=FALSE)
-psms(msnid) <- PSMresults
+msnid <- read_mzIDs(msnid,
+                    "TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzid")
 show(msnid)
+
+
+## ----msnvars-------------------------------------------------------------
+msnid <- correct_peak_selection(msnid)
+msnid$msmsScore <- -log10(msnid$`MS-GF:SpecEValue`)
+msnid$absParentMassErrorPPM <- abs(mass_measurement_error(msnid))
+
+
+## ----idplot, echo=FALSE--------------------------------------------------
+library("lattice")
+densityplot(psms(msnid)$msmsScore,
+            group = psms(msnid)$isDecoy,
+            auto.key=TRUE)
 
 
 ## ----msnidfilt-----------------------------------------------------------
-msnid$msmsScore <- -log10(msnid$`MS.GF.SpecEValue`)
-msnid$absParentMassErrorPPM <- abs(mass_measurement_error(msnid))
-
 filtObj <- MSnIDFilter(msnid)
 filtObj$absParentMassErrorPPM <- list(comparison="<", threshold=5.0)
 filtObj$msmsScore <- list(comparison=">", threshold=8.0)
-show(filtObj)
+filtObj
+
+evaluate_filter(msnid, filtObj)
+
+
+## ----filtopt-------------------------------------------------------------
 filtObj.grid <- optimize_filter(filtObj, msnid, fdr.max=0.01,
-                                method="Grid", level="peptide",
-                                n.iter=500)
-show(filtObj.grid)
+                                method="Grid", level="PSM",
+                                n.iter=50000)
+filtObj.grid
+evaluate_filter(msnid, filtObj.grid)
+
+
+## ----applyfilt-----------------------------------------------------------
 msnid <- apply_filter(msnid, filtObj.grid)
-show(msnid)
+msnid
 
 
 ## ----, msnset, echo=FALSE, fig.width = 5, fig.height = 7, fig.align='center'----
@@ -284,6 +331,7 @@ msexp
 
 ## ------------------------------------------------------------------------
 length(msexp)
+msnexp[1:2]
 msexp[[2]]
 
 

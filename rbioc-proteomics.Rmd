@@ -9,8 +9,6 @@ v <- system('git log -1 --format="%h [%ci]"', intern = TRUE)
 **Laurent Gatto**
 [Computational Proteomics Unit](http://cpu.sysbiol.cam.ac.uk)
 
-[Atelier PROSPECTOM](http://prospectom.liglab.fr/atelier-2014/index.html) 19 Nov 2014, Grenoble, France
-
 Version of this document: `r v`
 
 
@@ -48,7 +46,6 @@ The most convenient way to install all the tutorials requirement (and
 more related content), is to install
 [`RforProteomics`](http://www.bioconductor.org/packages/release/data/experiment/html/RforProteomics.html)
 with all its dependencies.
-
 
 ```{r r4pinstall, eval=FALSE}
 library("BiocInstaller")
@@ -148,6 +145,11 @@ library("rpx")
 pxannounced()
 ```
 
+Using the unique `PXD000001` identifier, we can retrieve the relevant
+metadata that will be stored in a `PXDataset` object. The names of the
+files available in this data can be retrieved with the `pxfiles`
+accessor function.
+
 ```{r, pxd, cache=TRUE}
 px <- PXDataset("PXD000001")
 px
@@ -162,8 +164,11 @@ pxurl(px)
 pxref(px)
 ```
 
-Data files can then be downloaded with the `pxget` function as
-illustrated below. 
+Data files can then be downloaded with the `pxget` function. Below, we
+retrieve the sixth file, `r pxfiles(px)[6]`. The file is downloaded in
+the working directory and the name of the file is return by the
+function and stored in the `mzf` variable for later use.
+
 
 ```{r, pxget}
 mzf <- pxget(px, pxfiles(px)[6])
@@ -192,16 +197,19 @@ table(sub("_.+$", "", rawf))
 ## Handling raw MS data
 
 The `mzR` package provides an interface to the
-[proteowizard](http://proteowizard.sourceforge.net/) code base,
-the legacy RAMP is a non-sequential parser and other C/C++ code to
-access various raw data files, such as `mzML`, `mzXML`, `netCDF`, and
-`mzData`. The data is accessed on-disk, i.e it does not get loaded
-entirely in memory by default. The three main functions are
-`openMSfile` to create a file handle to a raw data file, `header` to
-extract metadata about the spectra contained in the file and `peaks`
-to extract one or multiple spectra of interest. Other functions such
-as `instrumentInfo`, or `runInfo` can be used to gather general
-information about a run.
+[proteowizard](http://proteowizard.sourceforge.net/) C/C++ code base
+to access various raw data files, such as `mzML`, `mzXML`, `netCDF`,
+and `mzData`. The data is accessed on-disk, i.e it is not loaded
+entirely in memory by default but only when explicitly requested. The
+three main functions are `openMSfile` to create a file handle to a raw
+data file, `header` to extract metadata about the spectra contained in
+the file and `peaks` to extract one or multiple spectra of
+interest. Other functions such as `instrumentInfo`, or `runInfo` can
+be used to gather general information about a run.
+
+Below, we access the raw data file downloaded in the previous section
+and open a file handle that will allow us to extract data and metadata
+of interest.
 
 ```{r, rawms}
 library("mzR")
@@ -213,6 +221,14 @@ ms
 hd <- header(ms)
 dim(hd)
 names(hd)
+```
+
+We can extract metadata and scan data for scan 1000 as follows:
+
+```{r, simpleplot}
+hd[1000, ]
+head(peaks(ms, 1000))
+plot(peaks(ms, 1000), type = "h")
 ```
 
 #### Exercise
@@ -242,10 +258,38 @@ plot(pj, type = "l", main = paste("Acquisition", 100))
 plot(pj, type = "l", xlim = c(536,540))
 ```
 
+#### Exercise
+
 > Read the `MSnbase::MSmap` manual and look at the example to learn
 > how the `mzR` raw data support can be exploited to generate maps of
 > slides of raw MS data. (Note that the `hd` variable containing the
 > raw data header was missing in `MSnbase` version < `1.14.1`.)
+
+#### Solution
+
+Below we reproduce the example from the `MSmap` function from the
+`MSnbase` package to plot a specific slice of the raw data using the
+`mzR` functions we have just described.
+
+```{r, msmap}
+## a set of spectra of interest: MS1 spectra eluted
+## between 30 and 35 minutes retention time
+ms1 <- which(hd$msLevel == 1)
+rtsel <- hd$retentionTime[ms1] / 60 > 30 &
+    hd$retentionTime[ms1] / 60 < 35
+
+## the map
+M <- MSmap(ms, ms1[rtsel], 521, 523, .005, hd)
+
+plot(M, aspect = 1, allTicks = FALSE)
+plot3D(M)
+
+## With some MS2 spectra
+i <- ms1[which(rtsel)][1]
+j <- ms1[which(rtsel)][2]
+M2 <- MSmap(ms, i:j, 100, 1000, 1, hd)
+plot3D(M2)
+```
 
 ## Handling identification data
 
@@ -292,10 +336,13 @@ library("lattice")
 xyplot(plength ~ npep | bins, data = x)
 ```
 
+#### Exercise
 
 > The `mzR` package also support fast parsing of `mzIdentML` files
 > with the `openIDfile` function. Compare it, it terms of output and
 > speed with `mzID`.
+
+#### Solution
 
 ```{r mzrvsid, eval = TRUE}
 library("mzR")
@@ -365,13 +412,13 @@ mzf <- "TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzXML"
 > Search `r mzf` against the fasta file from `PXD000001` using, for
 > example, `MSGFplus`/`MSGFgui`.
 
-
 #### Solution
 
 1. Get the fasta database:
 
 ```{r ex_getfas}
 fas <- pxget(px, pxfiles(px)[8])
+basename(fas)
 ```
 
 2. One could run MSGF+ from the command-line directly from `R`:
@@ -387,18 +434,28 @@ cmd
 system(cmd)
 ```
 
-or, use `MSGFplus`:
+3. Use `MSGFplus`:
 
 ```{r ex_msgfplus, eval=FALSE}
 library("MSGFplus")
 msgfpar <- msgfPar(database = fas,
-               instrument = 'HighRes',
-               enzyme = 'Trypsin',
-               protocol = 'iTRAQ')
-runMSGF(msgfpar, mzf)
+                   instrument = 'HighRes',
+                   tda = TRUE,
+                   enzyme = 'Trypsin',
+                   protocol = 'iTRAQ')
+idres <- runMSGF(msgfpar, mzf, memory=1000)
+idres
+## identification file (needed below)
+basename(files(idres)$id)
 ```
 
-or, through the graphical user interface:
+(Note that in the `runMSGF` call above, I explicitly reduce the memory
+allocated to the java virtual machine to 3.5GB. In general, there is
+no need to specify this argument, unless you experience an error
+regarding the *maximum heap size*).
+
+
+4. Through the graphical user interface:
 
 ```{r ex_msgfgui, eval=FALSE}
 library("MSGFgui")
@@ -414,36 +471,66 @@ identifications. One starts with the construction of an `MSnID`
 object that is populated with identification results that can be
 imported from a `data.frame` or from `mzIdenML` files.
 
-
 ```{r, msnid}
 library("MSnID")
 msnid <- MSnID(".")
-
-PSMresults <- read.delim(system.file("extdata", "human_brain.txt",
-                                     package="MSnID"),
-                         stringsAsFactors=FALSE)
-psms(msnid) <- PSMresults
+msnid <- read_mzIDs(msnid,
+                    "TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzid")
 show(msnid)
 ```
 
 The package then enables to define, optimise and apply filtering based
 for example on missed cleavages, identification scores, precursor mass
-errors, etc. and assess PSM, peptide and protein FDR levels.
+errors, etc. and assess PSM, peptide and protein FDR levels. Below, we
+start by apply a correction of monoisotopic peaks (see
+`?correct_peak_selection` for details) and define two variables to be
+used for identification filtering.
+
+```{r msnvars}
+msnid <- correct_peak_selection(msnid)
+msnid$msmsScore <- -log10(msnid$`MS-GF:SpecEValue`)
+msnid$absParentMassErrorPPM <- abs(mass_measurement_error(msnid))
+```
+
+As shown below, this particular spiked-in data set displays few high
+scoring non-decoy hits
+
+```{r idplot, echo=FALSE}
+library("lattice")
+densityplot(psms(msnid)$msmsScore,
+            group = psms(msnid)$isDecoy,
+            auto.key=TRUE)
+```
+
+We define a filter object, assigning arbitrary threshold and evaluate
+it on the `msnid` data
+
 
 ```{r msnidfilt}
-msnid$msmsScore <- -log10(msnid$`MS.GF.SpecEValue`)
-msnid$absParentMassErrorPPM <- abs(mass_measurement_error(msnid))
-
 filtObj <- MSnIDFilter(msnid)
 filtObj$absParentMassErrorPPM <- list(comparison="<", threshold=5.0)
 filtObj$msmsScore <- list(comparison=">", threshold=8.0)
-show(filtObj)
+filtObj
+
+evaluate_filter(msnid, filtObj)
+```
+
+We can also optimise the filtering with a target protein FDR value of
+0.01
+
+```{r filtopt}
 filtObj.grid <- optimize_filter(filtObj, msnid, fdr.max=0.01,
-                                method="Grid", level="peptide",
-                                n.iter=500)
-show(filtObj.grid)
+                                method="Grid", level="PSM",
+                                n.iter=50000)
+filtObj.grid
+evaluate_filter(msnid, filtObj.grid)
+```
+
+We can now apply the filter to the data
+
+```{r applyfilt}
 msnid <- apply_filter(msnid, filtObj.grid)
-show(msnid)
+msnid
 ```
 
 The resulting data can be exported to a `data.frame` or to a dedicated
@@ -518,6 +605,7 @@ the `[` operator.  Individual spectra can be accessed with `[[`.
 
 ```{r}
 length(msexp)
+msnexp[1:2]
 msexp[[2]]
 ```
 
