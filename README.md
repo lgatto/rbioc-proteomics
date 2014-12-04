@@ -5,8 +5,7 @@ package. It has been used (and updated) for the following events:
 
 1. [Bioconductor conference]
    (https://register.bioconductor.org/BioC2014/)
-   [workshop](http://bioconductor.org/help/course-materials/2014/BioC2014/Gatto.html),
-   31 July 2014, Boston, MA.
+   workshop, 31 July 2014, Boston, MA - [material](http://bioconductor.org/help/course-materials/2014/BioC2014/Gatto.html).
 2. [Aterlier PROSPECTOM](http://prospectom.liglab.fr/atelier-2014/index.html)
    19 Nov 2014, Grenoble, France - [material](https://github.com/lgatto/rbioc-proteomics/tree/19-11-2014-Grenoble).
 
