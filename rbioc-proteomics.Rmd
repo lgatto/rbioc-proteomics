@@ -436,7 +436,7 @@ system(cmd)
 
 3. Use `MSGFplus`:
 
-```{r ex_msgfplus, eval=FALSE}
+```{r ex_msgfplus, eval=TRUE}
 library("MSGFplus")
 msgfpar <- msgfPar(database = fas,
                    instrument = 'HighRes',

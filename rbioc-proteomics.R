@@ -236,17 +236,17 @@ cmd
 ## system(cmd)
 
 
-## ----ex_msgfplus, eval=FALSE---------------------------------------------
-## library("MSGFplus")
-## msgfpar <- msgfPar(database = fas,
-##                    instrument = 'HighRes',
-##                    tda = TRUE,
-##                    enzyme = 'Trypsin',
-##                    protocol = 'iTRAQ')
-## idres <- runMSGF(msgfpar, mzf, memory=1000)
-## idres
-## ## identification file (needed below)
-## basename(files(idres)$id)
+## ----ex_msgfplus, eval=TRUE----------------------------------------------
+library("MSGFplus")
+msgfpar <- msgfPar(database = fas,
+                   instrument = 'HighRes',
+                   tda = TRUE,
+                   enzyme = 'Trypsin',
+                   protocol = 'iTRAQ')
+idres <- runMSGF(msgfpar, mzf, memory=1000)
+idres
+## identification file (needed below)
+basename(files(idres)$id)
 
 
 ## ----ex_msgfgui, eval=FALSE----------------------------------------------

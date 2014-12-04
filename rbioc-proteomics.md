@@ -7,7 +7,7 @@ Using R and Bioconductor for proteomics data analysis
 **Laurent Gatto**
 [Computational Proteomics Unit](http://cpu.sysbiol.cam.ac.uk)
 
-Version of this document: c91f051 [2014-12-04 18:57:11 +0000]
+Version of this document: dd7e400 [2014-12-04 19:04:22 +0000]
 
 
 ## Setup
@@ -611,7 +611,7 @@ system.time({
 
 ```
 ##    user  system elapsed 
-##  18.903   0.062  18.995
+##  18.810   0.064  18.902
 ```
 
 ```r
@@ -686,7 +686,7 @@ system.time({
 
 ```
 ##    user  system elapsed 
-##   0.321   0.002   0.331
+##   0.320   0.001   0.321
 ```
 
 ```r
@@ -824,9 +824,38 @@ msgfpar <- msgfPar(database = fas,
                    enzyme = 'Trypsin',
                    protocol = 'iTRAQ')
 idres <- runMSGF(msgfpar, mzf, memory=1000)
+```
+
+```
+## java -Xmx1000M -jar /home/lg390/R/x86_64-unknown-linux-gnu-library/3.1/MSGFplus/MSGFPlus/MSGFPlus.jar -s TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzXML -o /home/lg390/Documents/Teaching/rbioc-proteomics/TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzid -d erwinia_carotovora.fasta -tda 1 -inst 1 -e 1 -protocol 2 
+## 
+## reading TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzid... DONE!
+```
+
+```r
 idres
+```
+
+```
+## An mzID object
+## 
+## Software used:   MS-GF+ (version: Beta (v10072))
+## 
+## Rawfile:         /home/lg390/Documents/Teaching/rbioc-proteomics/TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzXML
+## 
+## Database:        /home/lg390/Documents/Teaching/rbioc-proteomics/erwinia_carotovora.fasta
+## 
+## Number of scans: 5343
+## Number of PSM's: 5656
+```
+
+```r
 ## identification file (needed below)
 basename(files(idres)$id)
+```
+
+```
+## [1] "TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzid"
 ```
 
 (Note that in the `runMSGF` call above, I explicitly reduce the memory
@@ -878,7 +907,11 @@ msnid <- read_mzIDs(msnid,
 ```
 
 ```
-## Error: all(sapply(mzids, file.exists)) is not TRUE
+## Reading from mzIdentMLs ...
+```
+
+```
+## reading TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzid... DONE!
 ```
 
 ```r
@@ -888,7 +921,10 @@ show(msnid)
 ```
 ## MSnID object
 ## Working directory: "."
-## #Spectrum Files:  0
+## #Spectrum Files:  1 
+## #PSMs: 5759 at 100 % FDR
+## #peptides: 4942 at 99 % FDR
+## #accessions: 3148 at 100 % FDR
 ```
 
 The package then enables to define, optimise and apply filtering based
@@ -902,23 +938,13 @@ used for identification filtering.
 ```r
 msnid <- correct_peak_selection(msnid)
 msnid$msmsScore <- -log10(msnid$`MS-GF:SpecEValue`)
-```
-
-```
-## Error in log10(msnid$`MS-GF:SpecEValue`): non-numeric argument to mathematical function
-```
-
-```r
 msnid$absParentMassErrorPPM <- abs(mass_measurement_error(msnid))
 ```
 
 As shown below, this particular spiked-in data set displays few high
 scoring non-decoy hits
 
-
-```
-## Error in UseMethod("densityplot"): no applicable method for 'densityplot' applied to an object of class "NULL"
-```
+![plot of chunk idplot](figure/idplot-1.png) 
 
 We define a filter object, assigning arbitrary threshold and evaluate
 it on the `msnid` data
@@ -929,23 +955,12 @@ it on the `msnid` data
 filtObj <- MSnIDFilter(msnid)
 filtObj$absParentMassErrorPPM <- list(comparison="<", threshold=5.0)
 filtObj$msmsScore <- list(comparison=">", threshold=8.0)
-```
-
-```
-## Error in `$<-`(`*tmp*`, "msmsScore", value = structure(list(comparison = ">", : msmsScore is not a valid parameter!
-## See parameter names method for MSnID object.
-## Valid names are:
-## experimentalMassToCharge
-## absParentMassErrorPPM
-```
-
-```r
 filtObj
 ```
 
 ```
 ## MSnIDFilter object
-## (absParentMassErrorPPM < 5)
+## (absParentMassErrorPPM < 5) & (msmsScore > 8)
 ```
 
 ```r
@@ -953,7 +968,10 @@ evaluate_filter(msnid, filtObj)
 ```
 
 ```
-## Error: is.logical(object@psms$isDecoy) is not TRUE
+##                  fdr  n
+## PSM       0.04545455 23
+## peptide   0.06250000 17
+## accession 0.05882353 18
 ```
 
 We can also optimise the filtering with a target protein FDR value of
@@ -964,18 +982,12 @@ We can also optimise the filtering with a target protein FDR value of
 filtObj.grid <- optimize_filter(filtObj, msnid, fdr.max=0.01,
                                 method="Grid", level="PSM",
                                 n.iter=50000)
-```
-
-```
-## Error in `[.data.table`(msnidObj@psms, , c("isDecoy", names(filterObj)), : column(s) not found: isDecoy
-```
-
-```r
 filtObj.grid
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'filtObj.grid' not found
+## MSnIDFilter object
+## (absParentMassErrorPPM < 12) & (msmsScore > 8.1)
 ```
 
 ```r
@@ -983,7 +995,10 @@ evaluate_filter(msnid, filtObj.grid)
 ```
 
 ```
-## Error in apply_filter(object, filter): error in evaluating the argument 'filterObj' in selecting a method for function 'apply_filter': Error: object 'filtObj.grid' not found
+##           fdr  n
+## PSM         0 39
+## peptide     0 31
+## accession   0 26
 ```
 
 We can now apply the filter to the data
@@ -991,20 +1006,16 @@ We can now apply the filter to the data
 
 ```r
 msnid <- apply_filter(msnid, filtObj.grid)
-```
-
-```
-## Error in apply_filter(msnid, filtObj.grid): error in evaluating the argument 'filterObj' in selecting a method for function 'apply_filter': Error: object 'filtObj.grid' not found
-```
-
-```r
 msnid
 ```
 
 ```
 ## MSnID object
 ## Working directory: "."
-## #Spectrum Files:  0
+## #Spectrum Files:  1 
+## #PSMs: 39 at 0 % FDR
+## #peptides: 31 at 0 % FDR
+## #accessions: 26 at 0 % FDR
 ```
 
 The resulting data can be exported to a `data.frame` or to a dedicated
@@ -1073,7 +1084,7 @@ msexp
 ##  MSn M/Z range: 100 2016.66 
 ##  MSn retention times: 25:1 - 25:2 minutes
 ## - - - Processing information - - -
-## Data loaded: Thu Dec  4 19:00:08 2014 
+## Data loaded: Thu Dec  4 19:10:37 2014 
 ##  MSnbase version: 1.14.1 
 ## - - - Meta data  - - -
 ## phenoData
@@ -1254,8 +1265,8 @@ msexp[1:3]
 ##  MSn M/Z range: 100 2016.66 
 ##  MSn retention times: 25:1 - 25:2 minutes
 ## - - - Processing information - - -
-## Data loaded: Thu Dec  4 19:00:08 2014 
-## Data [numerically] subsetted 3 spectra: Thu Dec  4 19:00:09 2014 
+## Data loaded: Thu Dec  4 19:10:37 2014 
+## Data [numerically] subsetted 3 spectra: Thu Dec  4 19:10:38 2014 
 ##  MSnbase version: 1.14.1 
 ## - - - Meta data  - - -
 ## phenoData
@@ -1347,8 +1358,8 @@ processingData(msset)
 
 ```
 ## - - - Processing information - - -
-## Data loaded: Thu Dec  4 19:00:08 2014 
-## iTRAQ4 quantification by trapezoidation: Thu Dec  4 19:00:11 2014 
+## Data loaded: Thu Dec  4 19:10:37 2014 
+## iTRAQ4 quantification by trapezoidation: Thu Dec  4 19:10:39 2014 
 ##  MSnbase version: 1.14.1
 ```
 
@@ -1437,7 +1448,7 @@ mztf <- pxget(px, pxfiles(px)[2])
 ## experimentData: use 'experimentData(object)'
 ## Annotation:  
 ## - - - Processing information - - -
-## mzTab read: Thu Dec  4 19:00:13 2014 
+## mzTab read: Thu Dec  4 19:10:41 2014 
 ##  MSnbase version: 1.14.1
 ```
 
@@ -1550,8 +1561,8 @@ processingData(qnt.crct)
 ```
 ## - - - Processing information - - -
 ## Data loaded: Wed May 11 18:54:39 2011 
-## iTRAQ4 quantification by trapezoidation: Thu Dec  4 19:00:14 2014 
-## Purity corrected: Thu Dec  4 19:00:15 2014 
+## iTRAQ4 quantification by trapezoidation: Thu Dec  4 19:10:43 2014 
+## Purity corrected: Thu Dec  4 19:10:43 2014 
 ##  MSnbase version: 1.1.22
 ```
 
@@ -1613,10 +1624,10 @@ processingData(prt)
 ```
 ## - - - Processing information - - -
 ## Data loaded: Wed May 11 18:54:39 2011 
-## iTRAQ4 quantification by trapezoidation: Thu Dec  4 19:00:14 2014 
-## Purity corrected: Thu Dec  4 19:00:15 2014 
-## Normalised (quantiles): Thu Dec  4 19:00:15 2014 
-## Combined 55 features into 3 using sum: Thu Dec  4 19:00:15 2014 
+## iTRAQ4 quantification by trapezoidation: Thu Dec  4 19:10:43 2014 
+## Purity corrected: Thu Dec  4 19:10:43 2014 
+## Normalised (quantiles): Thu Dec  4 19:10:43 2014 
+## Combined 55 features into 3 using sum: Thu Dec  4 19:10:44 2014 
 ##  MSnbase version: 1.1.22
 ```
 
@@ -1747,8 +1758,8 @@ e
 ##   pubMedIds: http://www.ncbi.nlm.nih.gov/pubmed/22588121 
 ## Annotation:  
 ## - - - Processing information - - -
-## Subset [697,14][675,14] Thu Dec  4 19:00:15 2014 
-## Applied pp.msms.data preprocessing: Thu Dec  4 19:00:15 2014 
+## Subset [697,14][675,14] Thu Dec  4 19:10:44 2014 
+## Applied pp.msms.data preprocessing: Thu Dec  4 19:10:44 2014 
 ##  MSnbase version: 1.8.0
 ```
 
