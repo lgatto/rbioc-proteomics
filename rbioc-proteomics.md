@@ -7,7 +7,7 @@ Using R and Bioconductor for proteomics data analysis
 **Laurent Gatto**
 [Computational Proteomics Unit](http://cpu.sysbiol.cam.ac.uk)
 
-Version of this document: 39e04c5 [2014-11-23 16:33:35 +0000]
+Version of this document: c91f051 [2014-12-04 18:57:11 +0000]
 
 
 ## Setup
@@ -30,22 +30,8 @@ library("MLInterfaces")
 library("pRoloc")
 library("pRolocdata")
 library("rTANDEM")
-```
-
-```
-## Error in library("rTANDEM"): there is no package called 'rTANDEM'
-```
-
-```r
 library("MSGFplus")
 library("MSGFgui")
-```
-
-```
-## Error in library("MSGFgui"): there is no package called 'MSGFgui'
-```
-
-```r
 library("rols")
 library("hpar")
 ```
@@ -620,12 +606,12 @@ system.time({
 ```
 
 ```
-## reading TMT_Erwinia.mzid... DONE!
+## reading TMT_Erwinia.mzid.gz... DONE!
 ```
 
 ```
 ##    user  system elapsed 
-##  17.998   0.076  18.115
+##  18.903   0.062  18.995
 ```
 
 ```r
@@ -700,7 +686,7 @@ system.time({
 
 ```
 ##    user  system elapsed 
-##   0.302   0.002   0.305
+##   0.321   0.002   0.331
 ```
 
 ```r
@@ -819,7 +805,7 @@ cmd
 ```
 
 ```
-## [1] "java -jar /home/lg390/R/x86_64-unknown-linux-gnu-library/3.2/MSGFplus/MSGFPlus/MSGFPlus.jar -protocol 2 -inst 1 -s TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzXML -d erwinia_carotovora.fasta"
+## [1] "java -jar /home/lg390/R/x86_64-unknown-linux-gnu-library/3.1/MSGFplus/MSGFPlus/MSGFPlus.jar -protocol 2 -inst 1 -s TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzXML -d erwinia_carotovora.fasta"
 ```
 
 
@@ -1087,8 +1073,8 @@ msexp
 ##  MSn M/Z range: 100 2016.66 
 ##  MSn retention times: 25:1 - 25:2 minutes
 ## - - - Processing information - - -
-## Data loaded: Thu Dec  4 18:47:49 2014 
-##  MSnbase version: 1.15.3 
+## Data loaded: Thu Dec  4 19:00:08 2014 
+##  MSnbase version: 1.14.1 
 ## - - - Meta data  - - -
 ## phenoData
 ##   rowNames: 1
@@ -1268,9 +1254,9 @@ msexp[1:3]
 ##  MSn M/Z range: 100 2016.66 
 ##  MSn retention times: 25:1 - 25:2 minutes
 ## - - - Processing information - - -
-## Data loaded: Thu Dec  4 18:47:49 2014 
-## Data [numerically] subsetted 3 spectra: Thu Dec  4 18:47:49 2014 
-##  MSnbase version: 1.15.3 
+## Data loaded: Thu Dec  4 19:00:08 2014 
+## Data [numerically] subsetted 3 spectra: Thu Dec  4 19:00:09 2014 
+##  MSnbase version: 1.14.1 
 ## - - - Meta data  - - -
 ## phenoData
 ##   rowNames: 1
@@ -1361,9 +1347,9 @@ processingData(msset)
 
 ```
 ## - - - Processing information - - -
-## Data loaded: Thu Dec  4 18:47:49 2014 
-## iTRAQ4 quantification by trapezoidation: Thu Dec  4 18:47:50 2014 
-##  MSnbase version: 1.15.3
+## Data loaded: Thu Dec  4 19:00:08 2014 
+## iTRAQ4 quantification by trapezoidation: Thu Dec  4 19:00:11 2014 
+##  MSnbase version: 1.14.1
 ```
 
 Other MS2 quantitation methods available in `quantify` include the
@@ -1451,8 +1437,8 @@ mztf <- pxget(px, pxfiles(px)[2])
 ## experimentData: use 'experimentData(object)'
 ## Annotation:  
 ## - - - Processing information - - -
-## mzTab read: Thu Dec  4 18:47:52 2014 
-##  MSnbase version: 1.15.3
+## mzTab read: Thu Dec  4 19:00:13 2014 
+##  MSnbase version: 1.14.1
 ```
 
 It is also possible to import arbitrary spreadsheets as `MSnSet`
@@ -1564,8 +1550,8 @@ processingData(qnt.crct)
 ```
 ## - - - Processing information - - -
 ## Data loaded: Wed May 11 18:54:39 2011 
-## iTRAQ4 quantification by trapezoidation: Thu Dec  4 18:47:54 2014 
-## Purity corrected: Thu Dec  4 18:47:54 2014 
+## iTRAQ4 quantification by trapezoidation: Thu Dec  4 19:00:14 2014 
+## Purity corrected: Thu Dec  4 19:00:15 2014 
 ##  MSnbase version: 1.1.22
 ```
 
@@ -1627,10 +1613,10 @@ processingData(prt)
 ```
 ## - - - Processing information - - -
 ## Data loaded: Wed May 11 18:54:39 2011 
-## iTRAQ4 quantification by trapezoidation: Thu Dec  4 18:47:54 2014 
-## Purity corrected: Thu Dec  4 18:47:54 2014 
-## Normalised (quantiles): Thu Dec  4 18:47:54 2014 
-## Combined 55 features into 3 using sum: Thu Dec  4 18:47:54 2014 
+## iTRAQ4 quantification by trapezoidation: Thu Dec  4 19:00:14 2014 
+## Purity corrected: Thu Dec  4 19:00:15 2014 
+## Normalised (quantiles): Thu Dec  4 19:00:15 2014 
+## Combined 55 features into 3 using sum: Thu Dec  4 19:00:15 2014 
 ##  MSnbase version: 1.1.22
 ```
 
@@ -1761,8 +1747,8 @@ e
 ##   pubMedIds: http://www.ncbi.nlm.nih.gov/pubmed/22588121 
 ## Annotation:  
 ## - - - Processing information - - -
-## Subset [697,14][675,14] Thu Dec  4 18:47:55 2014 
-## Applied pp.msms.data preprocessing: Thu Dec  4 18:47:55 2014 
+## Subset [697,14][675,14] Thu Dec  4 19:00:15 2014 
+## Applied pp.msms.data preprocessing: Thu Dec  4 19:00:15 2014 
 ##  MSnbase version: 1.8.0
 ```
 
@@ -1944,7 +1930,7 @@ vignettes.
 
 
 ```
-## R Under development (unstable) (2014-11-01 r66923)
+## R version 3.1.1 Patched (2014-09-02 r66514)
 ## Platform: x86_64-unknown-linux-gnu (64-bit)
 ## 
 ## attached base packages:
@@ -1952,66 +1938,68 @@ vignettes.
 ## [8] methods   base     
 ## 
 ## other attached packages:
-##  [1] msmsTests_1.5.0       msmsEDA_1.5.0         lattice_0.20-29      
-##  [4] hpar_1.9.1            rols_1.9.0            pRolocdata_1.5.2     
-##  [7] pRoloc_1.7.1          MLInterfaces_1.47.0   cluster_1.15.3       
-## [10] annotate_1.45.0       XML_3.98-1.1          AnnotationDbi_1.29.10
-## [13] GenomeInfoDb_1.3.7    IRanges_2.1.21        S4Vectors_0.5.11     
-## [16] rpx_1.3.0             MSGFplus_1.1.2        MSnID_1.1.2          
-## [19] mzID_1.5.1            RforProteomics_1.5.2  MSnbase_1.15.3       
-## [22] BiocParallel_1.1.9    mzR_2.1.1             Rcpp_0.11.3          
-## [25] Biobase_2.27.0        BiocGenerics_0.13.2   BiocInstaller_1.17.1 
-## [28] knitr_1.8            
+##  [1] msmsTests_1.4.0      msmsEDA_1.4.0        lattice_0.20-29     
+##  [4] hpar_1.8.0           rols_1.8.0           MSGFgui_1.0.1       
+##  [7] rTANDEM_1.6.0        data.table_1.9.4     pRolocdata_1.5.2    
+## [10] pRoloc_1.7.1         MLInterfaces_1.46.0  cluster_1.15.3      
+## [13] annotate_1.44.0      XML_3.98-1.1         AnnotationDbi_1.28.1
+## [16] GenomeInfoDb_1.2.3   IRanges_2.0.0        S4Vectors_0.4.0     
+## [19] rpx_1.2.0            MSGFplus_1.0.3       MSnID_1.0.1         
+## [22] mzID_1.4.1           RforProteomics_1.5.2 MSnbase_1.14.1      
+## [25] BiocParallel_1.0.0   mzR_2.0.0            Rcpp_0.11.3         
+## [28] Biobase_2.26.0       BiocGenerics_0.12.1  BiocInstaller_1.16.1
+## [31] knitr_1.8           
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] affy_1.45.0                  affyio_1.35.0               
-##  [3] base64enc_0.1-2              BatchJobs_1.5               
-##  [5] BBmisc_1.8                   biocViews_1.35.8            
-##  [7] bitops_1.0-6                 BradleyTerry2_1.0-5         
-##  [9] brew_1.0-6                   brglm_0.5-9                 
-## [11] car_2.0-22                   caret_6.0-37                
-## [13] Category_2.33.0              caTools_1.17.1              
-## [15] checkmate_1.5.0              chron_2.3-45                
-## [17] class_7.3-11                 codetools_0.2-9             
-## [19] colorspace_1.2-4             data.table_1.9.4            
-## [21] DBI_0.3.1                    digest_0.6.4                
-## [23] doParallel_1.0.8             e1071_1.6-4                 
-## [25] edgeR_3.9.9                  evaluate_0.5.5              
-## [27] fail_1.2                     FNN_1.1                     
-## [29] foreach_1.4.2                formatR_1.0                 
-## [31] gdata_2.13.3                 genefilter_1.49.2           
-## [33] ggplot2_1.0.0                gplots_2.14.2               
-## [35] graph_1.45.0                 grid_3.2.0                  
-## [37] gridSVG_1.4-0                GSEABase_1.29.0             
-## [39] gtable_0.1.2                 gtools_3.4.1                
-## [41] htmltools_0.2.6              httpuv_1.3.2                
-## [43] impute_1.41.0                interactiveDisplay_1.5.0    
-## [45] interactiveDisplayBase_1.5.1 iterators_1.0.7             
-## [47] kernlab_0.9-19               KernSmooth_2.23-13          
-## [49] labeling_0.3                 limma_3.23.2                
-## [51] lme4_1.1-7                   lpSolve_5.6.10              
-## [53] MALDIquant_1.11              MASS_7.3-35                 
-## [55] Matrix_1.1-4                 mclust_4.4                  
-## [57] mime_0.2                     minqa_1.2.4                 
-## [59] munsell_0.4.2                mvtnorm_1.0-1               
-## [61] nlme_3.1-118                 nloptr_1.0.4                
-## [63] nnet_7.3-8                   pcaMethods_1.57.0           
-## [65] pls_2.4-3                    plyr_1.8.1                  
-## [67] preprocessCore_1.29.0        proto_0.3-10                
-## [69] proxy_0.4-13                 qvalue_1.41.0               
-## [71] R6_2.0.1                     randomForest_4.6-10         
-## [73] RBGL_1.43.0                  R.cache_0.10.0              
-## [75] RColorBrewer_1.0-5           RCurl_1.95-4.3              
-## [77] rda_1.0.2-2                  reshape2_1.4                
-## [79] RJSONIO_1.3-0                R.methodsS3_1.6.1           
-## [81] R.oo_1.18.0                  rpart_4.1-8                 
-## [83] RSQLite_1.0.0                RUnit_0.4.27                
-## [85] R.utils_1.34.0               sampling_2.6                
-## [87] scales_0.2.4                 sendmailR_1.2-1             
-## [89] sfsmisc_1.0-26               shiny_0.10.2.1              
-## [91] splines_3.2.0                SSOAP_0.8-0                 
-## [93] stringr_0.6.2                survival_2.37-7             
-## [95] tools_3.2.0                  vsn_3.35.0                  
-## [97] XMLSchema_0.7-2              xtable_1.7-4                
-## [99] zlibbioc_1.13.0
+##   [1] affy_1.44.0                  affyio_1.34.0               
+##   [3] base64enc_0.1-2              BatchJobs_1.5               
+##   [5] BBmisc_1.8                   biocViews_1.34.1            
+##   [7] bitops_1.0-6                 BradleyTerry2_1.0-5         
+##   [9] brew_1.0-6                   brglm_0.5-9                 
+##  [11] car_2.0-22                   caret_6.0-37                
+##  [13] Category_2.32.0              caTools_1.17.1              
+##  [15] checkmate_1.5.0              chron_2.3-45                
+##  [17] class_7.3-11                 codetools_0.2-9             
+##  [19] colorspace_1.2-4             DBI_0.3.1                   
+##  [21] digest_0.6.4                 doParallel_1.0.8            
+##  [23] e1071_1.6-4                  edgeR_3.8.5                 
+##  [25] evaluate_0.5.5               fail_1.2                    
+##  [27] FNN_1.1                      foreach_1.4.2               
+##  [29] formatR_1.0                  gdata_2.13.3                
+##  [31] genefilter_1.48.1            ggplot2_1.0.0               
+##  [33] gplots_2.14.2                graph_1.44.0                
+##  [35] grid_3.1.1                   gridSVG_1.4-0               
+##  [37] GSEABase_1.28.0              gtable_0.1.2                
+##  [39] gtools_3.4.1                 htmltools_0.2.6             
+##  [41] httpuv_1.3.2                 impute_1.40.0               
+##  [43] interactiveDisplay_1.4.0     interactiveDisplayBase_1.4.0
+##  [45] iterators_1.0.7              kernlab_0.9-19              
+##  [47] KernSmooth_2.23-13           labeling_0.3                
+##  [49] limma_3.22.1                 lme4_1.1-7                  
+##  [51] lpSolve_5.6.10               MALDIquant_1.11             
+##  [53] MASS_7.3-35                  Matrix_1.1-4                
+##  [55] mclust_4.4                   mime_0.2                    
+##  [57] minqa_1.2.4                  munsell_0.4.2               
+##  [59] mvtnorm_1.0-1                nlme_3.1-118                
+##  [61] nloptr_1.0.4                 nnet_7.3-8                  
+##  [63] pcaMethods_1.56.0            pls_2.4-3                   
+##  [65] plyr_1.8.1                   preprocessCore_1.28.0       
+##  [67] proto_0.3-10                 proxy_0.4-13                
+##  [69] qvalue_1.40.0                R6_2.0.1                    
+##  [71] randomForest_4.6-10          RBGL_1.42.0                 
+##  [73] R.cache_0.10.0               RColorBrewer_1.0-5          
+##  [75] RCurl_1.95-4.3               rda_1.0.2-2                 
+##  [77] reshape2_1.4                 rJava_0.9-6                 
+##  [79] RJSONIO_1.3-0                R.methodsS3_1.6.1           
+##  [81] R.oo_1.18.0                  rpart_4.1-8                 
+##  [83] RSQLite_1.0.0                RUnit_0.4.27                
+##  [85] R.utils_1.34.0               sampling_2.6                
+##  [87] scales_0.2.4                 sendmailR_1.2-1             
+##  [89] sfsmisc_1.0-26               shiny_0.10.2.1              
+##  [91] shinyFiles_0.4.0             splines_3.1.1               
+##  [93] SSOAP_0.8-0                  stringr_0.6.2               
+##  [95] survival_2.37-7              tools_3.1.1                 
+##  [97] vsn_3.34.0                   xlsx_0.5.7                  
+##  [99] xlsxjars_0.6.1               XMLSchema_0.7-2             
+## [101] xtable_1.7-4                 zlibbioc_1.12.0
 ```
