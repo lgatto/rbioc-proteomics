@@ -9,7 +9,7 @@ package. It has been used for the following events:
 2. [Aterlier PROSPECTOM](http://prospectom.liglab.fr/atelier-2014/index.html)
    19 Nov 2014, Grenoble, France - [material](https://github.com/lgatto/rbioc-proteomics/tree/19-11-2014-Grenoble).
 
-The latest version is available in the master branch.
+The latest version is available in the [master](https://github.com/lgatto/rbioc-proteomics) branch.
 
 See also the [TeachingMaterial](https://github.com/lgatto/TeachingMaterial)
 repository for general `R` material.
