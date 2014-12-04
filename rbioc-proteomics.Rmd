@@ -29,6 +29,7 @@ The follow packages will be used throughout this documents. R version
 library("mzR")
 library("mzID")
 library("MSnID")
+library("msmsTests")
 library("MSGFplus")
 library("MSnbase")
 library("rpx")
@@ -436,7 +437,7 @@ system(cmd)
 
 3. Use `MSGFplus`:
 
-```{r ex_msgfplus, eval=TRUE}
+```{r ex_msgfplus, eval=TRUE, cache=TRUE}
 library("MSGFplus")
 msgfpar <- msgfPar(database = fas,
                    instrument = 'HighRes',
@@ -605,7 +606,7 @@ the `[` operator.  Individual spectra can be accessed with `[[`.
 
 ```{r}
 length(msexp)
-msnexp[1:2]
+msexp[1:2]
 msexp[[2]]
 ```
 

@@ -7,7 +7,7 @@ Using R and Bioconductor for proteomics data analysis
 **Laurent Gatto**
 [Computational Proteomics Unit](http://cpu.sysbiol.cam.ac.uk)
 
-Version of this document: dd7e400 [2014-12-04 19:04:22 +0000]
+Version of this document: cb37167 [2014-12-04 19:12:46 +0000]
 
 
 ## Setup
@@ -23,6 +23,7 @@ The follow packages will be used throughout this documents. R version
 library("mzR")
 library("mzID")
 library("MSnID")
+library("msmsTests")
 library("MSGFplus")
 library("MSnbase")
 library("rpx")
@@ -611,7 +612,7 @@ system.time({
 
 ```
 ##    user  system elapsed 
-##  18.810   0.064  18.902
+##  18.957   0.069  19.052
 ```
 
 ```r
@@ -686,7 +687,7 @@ system.time({
 
 ```
 ##    user  system elapsed 
-##   0.320   0.001   0.321
+##   0.325   0.001   0.326
 ```
 
 ```r
@@ -907,11 +908,7 @@ msnid <- read_mzIDs(msnid,
 ```
 
 ```
-## Reading from mzIdentMLs ...
-```
-
-```
-## reading TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzid... DONE!
+## Loaded cached data
 ```
 
 ```r
@@ -1084,7 +1081,7 @@ msexp
 ##  MSn M/Z range: 100 2016.66 
 ##  MSn retention times: 25:1 - 25:2 minutes
 ## - - - Processing information - - -
-## Data loaded: Thu Dec  4 19:10:37 2014 
+## Data loaded: Thu Dec  4 19:18:02 2014 
 ##  MSnbase version: 1.14.1 
 ## - - - Meta data  - - -
 ## phenoData
@@ -1115,11 +1112,38 @@ length(msexp)
 ```
 
 ```r
-msnexp[1:2]
+msexp[1:2]
 ```
 
 ```
-## Error in eval(expr, envir, enclos): object 'msnexp' not found
+## Object of class "MSnExp"
+##  Object size in memory: 0.09 Mb
+## - - - Spectra data - - -
+##  MS level(s): 2 
+##  Number of MS1 acquisitions: 1 
+##  Number of MSn scans: 2 
+##  Number of precursor ions: 2 
+##  2 unique MZs
+##  Precursor MZ's: 546.96 - 645.37 
+##  MSn M/Z range: 100 2016.66 
+##  MSn retention times: 25:1 - 25:2 minutes
+## - - - Processing information - - -
+## Data loaded: Thu Dec  4 19:18:02 2014 
+## Data [numerically] subsetted 2 spectra: Thu Dec  4 19:18:02 2014 
+##  MSnbase version: 1.14.1 
+## - - - Meta data  - - -
+## phenoData
+##   rowNames: 1
+##   varLabels: sampleNames
+##   varMetadata: labelDescription
+## Loaded from:
+##   dummyiTRAQ.mzXML 
+## protocolData: none
+## featureData
+##   featureNames: X1.1 X2.1
+##   fvarLabels: spectrum
+##   fvarMetadata: labelDescription
+## experimentData: use 'experimentData(object)'
 ```
 
 ```r
@@ -1265,8 +1289,8 @@ msexp[1:3]
 ##  MSn M/Z range: 100 2016.66 
 ##  MSn retention times: 25:1 - 25:2 minutes
 ## - - - Processing information - - -
-## Data loaded: Thu Dec  4 19:10:37 2014 
-## Data [numerically] subsetted 3 spectra: Thu Dec  4 19:10:38 2014 
+## Data loaded: Thu Dec  4 19:18:02 2014 
+## Data [numerically] subsetted 3 spectra: Thu Dec  4 19:18:03 2014 
 ##  MSnbase version: 1.14.1 
 ## - - - Meta data  - - -
 ## phenoData
@@ -1358,8 +1382,8 @@ processingData(msset)
 
 ```
 ## - - - Processing information - - -
-## Data loaded: Thu Dec  4 19:10:37 2014 
-## iTRAQ4 quantification by trapezoidation: Thu Dec  4 19:10:39 2014 
+## Data loaded: Thu Dec  4 19:18:02 2014 
+## iTRAQ4 quantification by trapezoidation: Thu Dec  4 19:18:04 2014 
 ##  MSnbase version: 1.14.1
 ```
 
@@ -1448,7 +1472,7 @@ mztf <- pxget(px, pxfiles(px)[2])
 ## experimentData: use 'experimentData(object)'
 ## Annotation:  
 ## - - - Processing information - - -
-## mzTab read: Thu Dec  4 19:10:41 2014 
+## mzTab read: Thu Dec  4 19:18:07 2014 
 ##  MSnbase version: 1.14.1
 ```
 
@@ -1561,8 +1585,8 @@ processingData(qnt.crct)
 ```
 ## - - - Processing information - - -
 ## Data loaded: Wed May 11 18:54:39 2011 
-## iTRAQ4 quantification by trapezoidation: Thu Dec  4 19:10:43 2014 
-## Purity corrected: Thu Dec  4 19:10:43 2014 
+## iTRAQ4 quantification by trapezoidation: Thu Dec  4 19:18:09 2014 
+## Purity corrected: Thu Dec  4 19:18:09 2014 
 ##  MSnbase version: 1.1.22
 ```
 
@@ -1624,10 +1648,10 @@ processingData(prt)
 ```
 ## - - - Processing information - - -
 ## Data loaded: Wed May 11 18:54:39 2011 
-## iTRAQ4 quantification by trapezoidation: Thu Dec  4 19:10:43 2014 
-## Purity corrected: Thu Dec  4 19:10:43 2014 
-## Normalised (quantiles): Thu Dec  4 19:10:43 2014 
-## Combined 55 features into 3 using sum: Thu Dec  4 19:10:44 2014 
+## iTRAQ4 quantification by trapezoidation: Thu Dec  4 19:18:09 2014 
+## Purity corrected: Thu Dec  4 19:18:09 2014 
+## Normalised (quantiles): Thu Dec  4 19:18:09 2014 
+## Combined 55 features into 3 using sum: Thu Dec  4 19:18:09 2014 
 ##  MSnbase version: 1.1.22
 ```
 
@@ -1711,13 +1735,6 @@ resources for proteomics data:
 
 ```r
 library(msmsTests)
-```
-
-```
-## Loading required package: msmsEDA
-```
-
-```r
 data(msms.dataset)
 msms.dataset
 ```
@@ -1758,8 +1775,8 @@ e
 ##   pubMedIds: http://www.ncbi.nlm.nih.gov/pubmed/22588121 
 ## Annotation:  
 ## - - - Processing information - - -
-## Subset [697,14][675,14] Thu Dec  4 19:10:44 2014 
-## Applied pp.msms.data preprocessing: Thu Dec  4 19:10:44 2014 
+## Subset [697,14][675,14] Thu Dec  4 19:18:10 2014 
+## Applied pp.msms.data preprocessing: Thu Dec  4 19:18:10 2014 
 ##  MSnbase version: 1.8.0
 ```
 
@@ -1949,13 +1966,13 @@ vignettes.
 ## [8] methods   base     
 ## 
 ## other attached packages:
-##  [1] msmsTests_1.4.0      msmsEDA_1.4.0        lattice_0.20-29     
-##  [4] hpar_1.8.0           rols_1.8.0           MSGFgui_1.0.1       
-##  [7] rTANDEM_1.6.0        data.table_1.9.4     pRolocdata_1.5.2    
-## [10] pRoloc_1.7.1         MLInterfaces_1.46.0  cluster_1.15.3      
-## [13] annotate_1.44.0      XML_3.98-1.1         AnnotationDbi_1.28.1
-## [16] GenomeInfoDb_1.2.3   IRanges_2.0.0        S4Vectors_0.4.0     
-## [19] rpx_1.2.0            MSGFplus_1.0.3       MSnID_1.0.1         
+##  [1] lattice_0.20-29      hpar_1.8.0           rols_1.8.0          
+##  [4] MSGFgui_1.0.1        rTANDEM_1.6.0        data.table_1.9.4    
+##  [7] pRolocdata_1.5.2     pRoloc_1.7.1         MLInterfaces_1.46.0 
+## [10] cluster_1.15.3       annotate_1.44.0      XML_3.98-1.1        
+## [13] AnnotationDbi_1.28.1 GenomeInfoDb_1.2.3   IRanges_2.0.0       
+## [16] S4Vectors_0.4.0      rpx_1.2.0            MSGFplus_1.0.3      
+## [19] msmsTests_1.4.0      msmsEDA_1.4.0        MSnID_1.0.1         
 ## [22] mzID_1.4.1           RforProteomics_1.5.2 MSnbase_1.14.1      
 ## [25] BiocParallel_1.0.0   mzR_2.0.0            Rcpp_0.11.3         
 ## [28] Biobase_2.26.0       BiocGenerics_0.12.1  BiocInstaller_1.16.1

@@ -14,6 +14,7 @@ library("RforProteomics")
 library("mzR")
 library("mzID")
 library("MSnID")
+library("msmsTests")
 library("MSGFplus")
 library("MSnbase")
 library("rpx")
@@ -236,7 +237,7 @@ cmd
 ## system(cmd)
 
 
-## ----ex_msgfplus, eval=TRUE----------------------------------------------
+## ----ex_msgfplus, eval=TRUE, cache=TRUE----------------------------------
 library("MSGFplus")
 msgfpar <- msgfPar(database = fas,
                    instrument = 'HighRes',
@@ -331,7 +332,7 @@ msexp
 
 ## ------------------------------------------------------------------------
 length(msexp)
-msnexp[1:2]
+msexp[1:2]
 msexp[[2]]
 
 
