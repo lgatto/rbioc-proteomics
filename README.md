@@ -1,3 +1,6 @@
+> **Please use the more recent [R/Bioconductor for mass spectrometry and proteomics](https://github.com/lgatto/bioc-ms-prot) material.**
+
+
 This repository contains material to teach/illustrate computational
 proteomics using R and Bioconductor packages. It is based on content
 from the
